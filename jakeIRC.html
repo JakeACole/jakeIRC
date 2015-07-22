@@ -1,0 +1,120 @@
+<head>
+  <title>jakeIRC</title>
+</head>
+
+<body>
+	{{> header}}
+	{{> ircPage}}
+	
+</body>
+
+<template name="listmsg">
+	<p>{{timestamp}} | {{user}}: {{content}}</p>
+</template>
+
+<template name="ircPage">
+	<div class ="row">
+		<div class = "col-xs-1"></div>
+
+		<div class = "col-xs-2 channel-list">
+			<h4> Channels </h4>
+
+			<hr />
+
+			{{#each channels}}
+				<p> <a>{{channelname}}</a> </p>
+			{{/each}}
+		</div>
+
+		<div class = "col-xs-6 chat-window">
+			<h4> Messages </h4>
+
+			<hr />
+
+			{{#each messages}}
+				{{> listmsg}}
+			{{/each}}
+		</div>
+
+		<div class = "col-xs-2 user-list">
+			<h4> Users </h4>
+
+			<hr />
+
+			{{#each users}}
+				<p>{{username}}</p>
+			{{/each}}
+		</div>
+
+		<div class ="col-xs-1"></div>
+	</div>	
+
+	<div class = "row">
+		<div class ="col-xs-1"></div>
+
+		<div class = "col-xs-10 input-field">
+
+			<div class="col-xs-2 col-md-1">
+				<p> user 1: </p>
+			</div>
+
+			<div class="col-xs-8 col-md-9"> 
+				<input class="form-control col-xs-10" placeholder="enter text here..."> 
+			</div>
+
+			<div class = "col-xs-2"> 
+				<button id="input-message">enter</button>
+			</div>
+		</div>
+
+		<div class ="col-xs-1"></div>
+	</div>
+
+</template>
+
+<template name="header">
+	<header class = "row">
+		<div class ="col-xs-1"></div>
+		<div class="col-xs-10 nav-bar">
+
+			<div class="col-xs-5">
+				<h4>Jake's IRC Client</h4>
+			</div>
+
+			<div class="col-xs-1">
+				<button>
+					<a>Menu</a>
+				</button>
+			</div>
+
+			<div class="col-xs-1">
+				<button>
+					<a>View</a>
+				</button>
+			</div>
+
+			<div class="col-xs-1">
+				<button>
+					<a>Server</a>
+				</button>
+			</div>
+
+			<div class="col-xs-1">
+				<button>
+					<a>Window</a>
+				</button>
+			</div>
+
+			<div class="col-xs-1">
+				<button>
+					<a>Help</a>
+				</button>
+			</div>
+
+		</div>
+
+		<div class ="col-xs-1"></div>
+
+	</header>
+
+</template>

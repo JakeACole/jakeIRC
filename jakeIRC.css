@@ -1,0 +1,42 @@
+/* CSS declarations go here */
+
+.chat-window, .user-list, .channel-list {
+	min-height: 400px;
+	margin-right: 2.5px;
+
+	border: 1px solid #000;
+	border-radius: 10px;
+}
+
+.user-list {
+
+}
+
+.input-field {
+	margin-top: 20px;
+	height: 60px;
+
+	border: 1px solid #000;
+	border-radius: 10px;
+	display: inline-block;
+}
+
+.input-field button, .input-field p {
+	margin-top: 15px;
+}
+
+.nav-bar {
+	height: 50px;
+	margin-bottom: 20px;
+
+	border: 1px solid #000;
+	border-radius: 10px;
+}
+
+.nav-bar button {
+	margin-top: 10px;
+}
+
+.form-control {
+	margin-top: 10px !important;
+}
