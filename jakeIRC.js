@@ -19,19 +19,7 @@ if (Meteor.isClient) {
       {channelname: '#channel 3'},
       {channelname: '#channel 4'}
     ]
-
-
     /*messages: function() {
-      
-      //var cursor = Messages.find().fetch().reverse();
-
-      cursor.forEach(function(document) {
-          messageList.push('[' + document.message_type + '] ' + document.message);
-      });
-    },
-
-    users: function() {
-      //var messageList = [];
       
       //var cursor = Messages.find().fetch().reverse();
 
@@ -43,18 +31,19 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-/*
+
   var ircPrm = {
-    server: 'irc.---',
+    server: 'irc.rizon.net',
     port: 6667,
-    nick: '---',
-    password: 'oauth:' + CONNECT_TOKEN,
-    username: '---',
-    channels: ['---'],
+    nick: 'Winter_EC',
+    channels: ['#dolphin-ssbm'],
     debug: true,
     stripColors: true
   };
 
   client = new IRC(ircPrm);
-  client.connect();*/
+  client.connect( function() {
+    client.say('dolphin-ssbm', "Hello World - from meteor!");
+  });
+
 }

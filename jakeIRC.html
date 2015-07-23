@@ -5,7 +5,6 @@
 <body>
 	{{> header}}
 	{{> ircPage}}
-	
 </body>
 
 <template name="listmsg">
@@ -24,6 +23,13 @@
 			{{#each channels}}
 				<p> <a>{{channelname}}</a> </p>
 			{{/each}}
+
+			<hr />
+
+			<input class="form-control" placeholder="add channel"> 
+			<p></p>
+			<button id="input-message">add channel</button>
+			<button id="input-message">remove channel</button>
 		</div>
 
 		<div class = "col-xs-6 chat-window">
@@ -44,6 +50,8 @@
 			{{#each users}}
 				<p>{{username}}</p>
 			{{/each}}
+
+			<hr />
 		</div>
 
 		<div class ="col-xs-1"></div>
@@ -54,11 +62,11 @@
 
 		<div class = "col-xs-10 input-field">
 
-			<div class="col-xs-2 col-md-1">
+			<div class="col-xs-2">
 				<p> user 1: </p>
 			</div>
 
-			<div class="col-xs-8 col-md-9"> 
+			<div class="col-xs-8"> 
 				<input class="form-control col-xs-10" placeholder="enter text here..."> 
 			</div>
 

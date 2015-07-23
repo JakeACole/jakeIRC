@@ -11,4 +11,6 @@ mrt:meteor-node-irc
 mrt:jquery-ui
 jquery
 twbs:bootstrap
+jameslefrere:irc
+
 
