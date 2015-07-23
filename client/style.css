@@ -1,9 +1,17 @@
-/* CSS declarations go here */
+/* jakeIRC styles*/
 
 body {
 	width: 100%;
 	margin: 0 auto;
 	overflow: hidden;
+}
+
+header {
+	margin-top: 5px;
+}
+
+.chat-window, .user-list, .channel-list, .input-field, .nav-bar {
+	background: #E9E9E9;
 }
 
 .chat-window, .user-list, .channel-list {
@@ -39,6 +47,10 @@ body {
 
 .nav-bar button {
 	margin-top: 10px;
+}
+
+.channel-list button {
+	margin-right: 10px;
 }
 
 .form-control {

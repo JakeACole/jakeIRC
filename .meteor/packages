@@ -12,5 +12,5 @@ mrt:jquery-ui
 jquery
 twbs:bootstrap
 jameslefrere:irc
-
-
+meteorhacks:npm
+npm-container
