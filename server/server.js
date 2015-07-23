@@ -1,7 +1,6 @@
 if (Meteor.isServer) {
 
   //var irc = require("irc");
-
   Messages = new Mongo.Collection("messages");
 
   var ircPrm = {
