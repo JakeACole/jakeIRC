@@ -1,6 +1,8 @@
+<!-- This is the main templare ircPage -->
 <template name="ircPage">
 	<div class ="row">
 		<div class = "col-xs-1"></div>
+		<!-- This is where the list of channels are displayed -->
 		<div class = "col-xs-2 channel-list">
 			<h4> Channels </h4>
 
@@ -16,6 +18,7 @@
 			<button id="input-message">remove channel</button>
 		</div>
 
+		<!-- This is where the chat window is displayed -->
 		<div class = "col-xs-6 chat-window">
 			<h4> Messages </h4>
 
@@ -31,6 +34,7 @@
 
 		</div>
 
+		<!-- This is where the list of users are displayed -->
 		<div class = "col-xs-2 user-list">
 			<h4> Users </h4>
 
@@ -67,6 +71,7 @@
 
 </template>
 
+<!-- This template allows for the message to have multiple meteor parameters -->
 <template name="listmsg">
 	<p>{{timestamp}} | {{user}}: {{content}}</p>
 </template>

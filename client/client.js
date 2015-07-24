@@ -1,3 +1,4 @@
+//These are meteor arrays of objects that are displayed as dummy data at the moment
 messageList = [
   {timestamp: '5:36', user: 'Andy', content: 'Hey, how is it going?'},
   {timestamp: '5:37', user: 'Jake', content: 'Not bad how are you?'},
@@ -23,12 +24,14 @@ channelList = [
 
 if (Meteor.isClient) {
 
+  //These helpers allow meteor objects to display on the GUI
   Template.ircPage.helpers({
     messages: messageList,
     users : userList,
     channels : channelList
   });
 
+  //These events allow the send message and enter key to send messages to the irc channel
   Template.ircPage.events({
     'click #msg-btn': function(event, template) {
         Meteor.call('sendMessage', template.find('#msg-bar').value, 'USER');
