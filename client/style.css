@@ -1,8 +1,21 @@
-/* CSS declarations go here */
+/* jakeIRC styles*/
+
+body {
+	width: 100%;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+header {
+	margin-top: 5px;
+}
+
+.chat-window, .user-list, .channel-list, .input-field, .nav-bar {
+	background: #E9E9E9;
+}
 
 .chat-window, .user-list, .channel-list {
 	min-height: 400px;
-	margin-right: 2.5px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
@@ -18,7 +31,6 @@
 
 	border: 1px solid #000;
 	border-radius: 10px;
-	display: inline-block;
 }
 
 .input-field button, .input-field p {
@@ -35,6 +47,10 @@
 
 .nav-bar button {
 	margin-top: 10px;
+}
+
+.channel-list button {
+	margin-right: 10px;
 }
 
 .form-control {
