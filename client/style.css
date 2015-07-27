@@ -15,14 +15,8 @@ body {
 	text-align: left;
 }
 
-.window-header {
-	position: fixed;
-	margin-bottom: 10px;
-}
-
 .category{
 	margin-bottom: 10px;
-
 }
 
 .chat-window, .user-list, .channel-list, .input-field, .nav-bar, .category {
