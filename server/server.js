@@ -32,7 +32,7 @@ if (Meteor.isServer) {
   //addListener allows for messages to be recieved
   client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
     console.log(from + ' => ' + to + ': ' + message);
-    logMessage(from.username, message);
+    logMessage(from, message);
   }));
 
   /* 'names#winter-irc-test' */
