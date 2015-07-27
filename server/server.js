@@ -30,15 +30,17 @@ if (Meteor.isServer) {
   client.connect();
 
   //addListener allows for messages to be recieved
-  client.addListener('message', function (from, to, message) {
+  client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
     console.log(from + ' => ' + to + ': ' + message);
-    logMessage(from, message);
-  });
+    logMessage(from.username, message);
+  }));
+
+  /* 'names#winter-irc-test' */
 
   //catches errors
-  client.addListener('error', function(message) {
+  client.addListener('error', Meteor.bindEnvironment (function(message) {
     console.log('error: ', message);
-  });
+  }));
 
   //Allows the client to send a message 
   Meteor.methods({

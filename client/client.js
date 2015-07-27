@@ -34,11 +34,11 @@ if (Meteor.isClient) {
           pulledMessages.push({
             message: time + document.from + ': ' + document.message, position: i
           });
-          
+
           i++;
       });
 
-      return pulledMessages.slice(0, 10);
+      return pulledMessages.slice();
     },
 
     users : userList,

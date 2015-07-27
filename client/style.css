@@ -4,26 +4,48 @@ body {
 	width: 100%;
 	margin: 5%;
 
-	overflow-x: hidden;
+	text-align: center;
+
+	overflow: hidden;
+    overflow-y: auto;
 }
 
 .row {
 	width: 90%;
+	text-align: left;
 }
 
-.chat-window, .user-list, .channel-list, .input-field, .nav-bar {
+.window-header {
+	position: fixed;
+	margin-bottom: 10px;
+}
+
+.category{
+	margin-bottom: 10px;
+
+}
+
+.chat-window, .user-list, .channel-list, .input-field, .nav-bar, .category {
 	background: #E9E9E9;
 }
 
-.chat-window, .user-list, .channel-list {
-	min-height: 350px;
-
+.chat-window, .user-list, .channel-list, .category {
 	border: 1px solid #000;
 	border-radius: 10px;
 }
 
+.chat-window, .user-list, .channel-list {
+	height: 350px;
+
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	overflow: hidden;
+    overflow-y: auto;
+}
+
 .input-field {
-	margin-top: 20px;
+	margin-top: 10px;
 	height: 60px;
 
 	border: 1px solid #000;
@@ -36,7 +58,7 @@ body {
 
 .nav-bar {
 	height: 50px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 
 	border: 1px solid #000;
 	border-radius: 10px;

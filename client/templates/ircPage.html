@@ -1,15 +1,29 @@
 <!-- This is the main templare ircPage -->
 <template name="ircPage">
+
+	<div class ="row category">
+		<div class = "col-xs-4 col-sm-3 col-md-2">
+			<h4> Channels </h4>
+		</div>
+
+		<div class = "col-xs-5 col-sm-7 col-md-8">
+			<h4> Messages </h4>
+		</div>
+
+		<div class = "col-xs-3 col-sm-2">
+			<h4> Users </h4>
+		</div>
+	</div>
+
 	<div class ="row">
 		<!-- This is where the list of channels are displayed -->
 		<div class = "col-xs-4 col-sm-3 col-md-2 channel-list">
-			<h4> Channels </h4>
 
-			<hr />
 			{{#each channels}}
 				<p> <a>{{channelname}}</a> </p>
 			{{/each}}
-			<hr />
+
+			<hr />			
 
 			<input class="form-control" placeholder="#channelName ..."> 
 			<p></p>
@@ -18,14 +32,7 @@
 		</div>
 
 		<!-- This is where the chat window is displayed -->
-		<div class = "col-xs-5 col-sm-7 col-md-8 chat-window">
-			<h4> Messages </h4>
-
-			<hr />
-
-			<!-- {{#each messages}}
-				{{> listmsg}}
-			{{/each}} -->
+		<div class = "col-xs-5 col-sm-7 col-md-8 chat-window">	
 
 			{{#each messages}}
 				<p>{{this}}</p>
@@ -35,13 +42,12 @@
 
 		<!-- This is where the list of users are displayed -->
 		<div class = "col-xs-3 col-sm-2 user-list">
-			<h4> Users </h4>
 
-			<hr />
-
+			<div class="window-content">
 			{{#each users}}
 				<p>{{username}}</p>
 			{{/each}}
+			</div>
 
 		</div>
 	</div>	
@@ -67,11 +73,6 @@
 
 </template>
 
-<!-- This template allows for the message to have multiple meteor parameters -->
-<!-- <template name="listmsg">
-	<p>{{timestamp}} | {{user}}: {{content}}</p>
-</template>-->
-
 <template name="header">
 	<header class = "row">
 		<div class="col-xs-12 nav-bar">
@@ -81,7 +82,7 @@
 
 			<div class = "col-xs-5">
 			</div>
-			
+
 			<!--<div class="col-xs-1">
 				<button>
 					<a>Menu</a>
@@ -110,3 +111,8 @@
 		</div>
 	</header>
 </template>
+
+<!-- This template allows for the message to have multiple meteor parameters -->
+<!-- <template name="listmsg">
+	<p>{{timestamp}} | {{user}}: {{content}}</p>
+</template>-->
