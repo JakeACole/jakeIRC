@@ -4,6 +4,8 @@ body {
 	width: 100%;
 	margin: 5%;
 
+	min-width: 600px;
+
 	text-align: center;
 
 	overflow: hidden;
@@ -20,13 +22,30 @@ body {
 }
 
 .chat-window, .user-list, .channel-list, .input-field, .nav-bar, .category {
-	background: #E9E9E9;
+	background: #F8F8F8;
 }
 
 .chat-window, .user-list, .channel-list, .category {
 	border: 1px solid #000;
 	border-radius: 10px;
 }
+
+.chat-window {
+	border-radius: 0px !important;
+}
+
+.user-list {
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+	border-left: 0px !important;
+}
+
+.channel-list {
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
+	border-right: 0px !important;
+}
+
 
 .chat-window, .user-list, .channel-list {
 	height: 350px;
@@ -46,7 +65,11 @@ body {
 	border-radius: 10px;
 }
 
-.input-field button, .input-field p {
+.input-field button {
+	margin-top: 10px;
+}
+
+.input-field h4 {
 	margin-top: 15px;
 }
 
@@ -59,13 +82,22 @@ body {
 }
 
 .nav-bar button {
-	margin-top: 10px;
+	margin-top: 7.5px;
 }
 
 .channel-list button {
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 .form-control {
 	margin-top: 10px !important;
+}
+
+.close-channel {
+	font-size: 125%;
+	float: right;
+}
+
+a:link, a:visited, a:active, a:hover {
+	text-decoration: none;
 }

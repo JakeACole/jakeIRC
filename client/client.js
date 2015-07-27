@@ -1,16 +1,9 @@
 //These are meteor arrays of objects that are displayed as dummy data at the moment
-/*messageList = [
-  {timestamp: '5:36', user: 'Andy', content: 'Hey, how is it going?'},
-  {timestamp: '5:37', user: 'Jake', content: 'Not bad how are you?'},
-  {timestamp: '5:37', user: 'Brandon', content: 'IRC is awesome!'},
-  {timestamp: '5:37', user: 'Walter', content: 'Yes it is'},
-  {timestamp: '5:37', user: 'Jake', content: "Can't disagree there"}
-];*/
 
-userList = [
+/*userList = [
   {username: 'Arch_client'},
   {username: 'Winter[Arch]'}
-];
+];*/
 
 channelList = [
   {channelname: '#winter-irc-test'}
@@ -19,6 +12,7 @@ channelList = [
 if (Meteor.isClient) {
 
   Messages = new Mongo.Collection("messages");
+  Users = new Mongo.Collection("users");
 
   //These helpers allow meteor objects to display on the GUI
   Template.ircPage.helpers({
@@ -41,7 +35,25 @@ if (Meteor.isClient) {
       return pulledMessages.slice();
     },
 
-    users : userList,
+    users : function() {
+      var pulledUsers = [];
+        
+      var cursor = Users.find().fetch();
+      var i = 0;
+
+      cursor.forEach(function(document) {
+          var time = formatTime(document.time);
+
+          pulledUsers.push({
+            users: time + document.nicks, position: i
+          });
+
+          i++;
+      });
+
+      return pulledUsers.slice();
+    },
+
     channels : channelList
   });
 

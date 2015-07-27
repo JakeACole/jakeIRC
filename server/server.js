@@ -1,6 +1,7 @@
 if (Meteor.isServer) {
 
   Messages = new Mongo.Collection("messages");
+  Users = new Mongo.Collection("users");
 
   var irc = Meteor.npmRequire("irc");
   //var irc = Meteor.require("irc");
@@ -35,7 +36,11 @@ if (Meteor.isServer) {
     logMessage(from, message);
   }));
 
-  /* 'names#winter-irc-test' */
+  client.addListener('names#winter-irc-test', Meteor.bindEnvironment(function (nicks) {
+    console.log(nicks);
+    //logUsers(nicks);
+  }));
+  
 
   //catches errors
   client.addListener('error', Meteor.bindEnvironment (function(message) {
@@ -54,6 +59,13 @@ if (Meteor.isServer) {
     Messages.insert({
         from: from,
         message: message,
+        time: Date.now()
+    });
+  }
+
+  function logUsers(nicks) {
+    Users.insert({
+        nicks: nicks,
         time: Date.now()
     });
   }
