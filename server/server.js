@@ -1,43 +1,58 @@
 if (Meteor.isServer) {
 
-  //var irc = require("irc");
-
-  //This mongo collection stores messages
   Messages = new Mongo.Collection("messages");
 
-  //This is a channel the client can connect to
-  var ircPrm = {
-    server: 'irc.rizon.net',
-    port: 6667,
-    nick: 'Winter_EC',
-    channels: ['#dolphin-ssbm'],
-    debug: true,
-    stripColors: true
-  };
+  var irc = Meteor.npmRequire("irc");
+  //var irc = Meteor.require("irc");
 
   //These functions allow the irc client to connect, 
-  //they are currently being wonky with the packages I have installed
 
-  //var client = new irc(ircPrm);
-  //client.connect();
+  var client = new irc.Client('irc.rizon.net', 'Arch_Client', {
+    port: 6667,
+    channels: ['#winter-irc-test'],
+    localAddress: null,
+    debug: false,
+    showErrors: false,
+    autoRejoin: true,
+    autoConnect: true,
+    secure: false,
+    selfSigned: false,
+    certExpired: false,
+    floodProtection: false,
+    floodProtectionDelay: 1000,
+    sasl: false,
+    stripColors: false,
+    channelPrefixes: "&#",
+    messageSplit: 512,
+    encoding: ''
+  });
 
-  //addListener is not functioning with the current packages
-  /*client.addListener('messages', function (message) {
-    logMessage(message);
-  });*/
+  client.connect();
+
+  //addListener allows for messages to be recieved
+  client.addListener('message', function (from, to, message) {
+    console.log(from + ' => ' + to + ': ' + message);
+    logMessage(from, message);
+  });
+
+  //catches errors
+  client.addListener('error', function(message) {
+    console.log('error: ', message);
+  });
 
   //Allows the client to send a message 
   Meteor.methods({
     'sendMessage': function(message) {
-      client.say('#dolphin-ssbm', message);
+      client.say('#winter-irc-test', message);
     }
   });
 
   //Allows the client to insert a message into the log
-  function logMessage(message) {
-      messages.insert({
-          message: message,
-          time: Date.now(),
-      });
+  function logMessage(from, message) {
+    Messages.insert({
+        from: from,
+        message: message,
+        time: Date.now()
+    });
   }
 }

@@ -2,12 +2,13 @@
 
 body {
 	width: 100%;
-	margin: 0 auto;
-	overflow: hidden;
+	margin: 5%;
+
+	overflow-x: hidden;
 }
 
-header {
-	margin-top: 5px;
+.row {
+	width: 90%;
 }
 
 .chat-window, .user-list, .channel-list, .input-field, .nav-bar {
@@ -15,14 +16,10 @@ header {
 }
 
 .chat-window, .user-list, .channel-list {
-	min-height: 400px;
+	min-height: 350px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
-}
-
-.user-list {
-
 }
 
 .input-field {

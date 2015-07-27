@@ -1,9 +1,8 @@
 <!-- This is the main templare ircPage -->
 <template name="ircPage">
 	<div class ="row">
-		<div class = "col-xs-1"></div>
 		<!-- This is where the list of channels are displayed -->
-		<div class = "col-xs-2 channel-list">
+		<div class = "col-xs-4 col-sm-3 col-md-2 channel-list">
 			<h4> Channels </h4>
 
 			<hr />
@@ -19,23 +18,23 @@
 		</div>
 
 		<!-- This is where the chat window is displayed -->
-		<div class = "col-xs-6 chat-window">
+		<div class = "col-xs-5 col-sm-7 col-md-8 chat-window">
 			<h4> Messages </h4>
 
 			<hr />
 
-			{{#each messages}}
-				{{> listmsg}}
-			{{/each}}
-
 			<!-- {{#each messages}}
-				<p>{{this}}</p>
+				{{> listmsg}}
 			{{/each}} -->
+
+			{{#each messages}}
+				<p>{{this}}</p>
+			{{/each}}
 
 		</div>
 
 		<!-- This is where the list of users are displayed -->
-		<div class = "col-xs-2 user-list">
+		<div class = "col-xs-3 col-sm-2 user-list">
 			<h4> Users </h4>
 
 			<hr />
@@ -45,13 +44,11 @@
 			{{/each}}
 
 		</div>
-		<div class = "col-xs-1"></div>
 	</div>	
 
 	<div class = "row">
-		<div class ="col-xs-1"></div>
 
-		<div class = "col-xs-10 input-field">
+		<div class = "col-xs-12 input-field">
 
 			<div class="col-xs-2">
 				<p> Jake </p>
@@ -66,24 +63,26 @@
 			</div>
 		</div>
 
-		<div class ="col-xs-1"></div>
 	</div>
 
 </template>
 
 <!-- This template allows for the message to have multiple meteor parameters -->
-<template name="listmsg">
+<!-- <template name="listmsg">
 	<p>{{timestamp}} | {{user}}: {{content}}</p>
-</template>
+</template>-->
 
 <template name="header">
 	<header class = "row">
-		<div class ="col-xs-1"></div>
-		<div class="col-xs-10 nav-bar">
-			<div class="col-xs-5">
+		<div class="col-xs-12 nav-bar">
+			<div class="col-xs-7">
 				<h4>Jake's IRC Client</h4>
 			</div>
-			<div class="col-xs-1">
+
+			<div class = "col-xs-5">
+			</div>
+			
+			<!--<div class="col-xs-1">
 				<button>
 					<a>Menu</a>
 				</button>
@@ -107,8 +106,7 @@
 				<button>
 					<a>Help</a>
 				</button>
-			</div>
+			</div>-->
 		</div>
-		<div class ="col-xs-1"></div>
 	</header>
 </template>
