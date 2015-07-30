@@ -115,4 +115,3 @@ if (Meteor.isServer) {
     });
   }
 }
-
