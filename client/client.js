@@ -1,4 +1,4 @@
-//Client
+//Meteor Client JS
 
 channelList = [
   {channelname: '#winter-irc-test'}
@@ -6,21 +6,22 @@ channelList = [
 
 if (Meteor.isClient) {
 
-  var q = 0;
+  //Used for the scrollBottom() function
+  var msgCounter = 0;
 
+  //Allows client to access mongo collections
   Messages = new Mongo.Collection("messages");
   Users = new Mongo.Collection("users");
 
   //These helpers allow meteor objects to display on the GUI
   Template.ircPage.helpers({
 
+    //Helper renders the messages in the chat window
     messages: function() {
       var pulledMessages = [];
         
       var cursor = Messages.find().fetch();
       var i = 0;
-
-      var windowHeight = 0;
 
       cursor.forEach(function(document) {
           var time = formatTime(document.time);
@@ -29,9 +30,10 @@ if (Meteor.isClient) {
             message: time + document.from + ': ' + document.message, position: i
           });
 
-          if (q < i) {
+          //Scrolls to the bottom if a new message has been added
+          if (msgCounter < i) {
             scrollBottom();
-            q = i;
+            msgCounter = i;
           }
 
           i++;
@@ -40,23 +42,20 @@ if (Meteor.isClient) {
       return pulledMessages.slice();
     },
 
+    //Helper renders the current user list
     users : function() {
       var pulledUsers = [];
-        
+
       var cursor = Users.find().fetch();
       var i = 0;
 
-      cursor.forEach (function(document) {
+      cursor.forEach(function(document) {
 
-          /*pulledUsers.push({
-            users: document.nicks, position: i;
-          });*/
+        for (index = 0; index < document.nicks.length; ++index) {
+          pulledUsers.push(document.nicks[index]);
+        }
 
-          for (index = 0; index < document.nicks.length; ++index) {
-            pulledUsers.push(document.nicks[index]);
-          }
-
-          i++;
+        i++;
       });
 
       return pulledUsers.slice();
@@ -64,11 +63,12 @@ if (Meteor.isClient) {
     channels : channelList
   });
 
-  //when a message is entered, scroll to the bottom
+  //When a message is entered, scroll to the bottom
   function scrollBottom() {
     $(".chat-window").animate({scrollTop:$(".chat-window")[0].scrollHeight}, $(".chat-window").height());
   }
   
+  //Formats the time displayed in the irc chat
   function formatTime(milli) {
     var date =  new Date(milli);
     var minutes = date.getMinutes();
@@ -85,20 +85,27 @@ if (Meteor.isClient) {
     return '[' + date.getHours() + ':' + minutes + ':' + seconds + '] ';
   }
 
-  //These events allow the send message and enter key to send messages to the irc channel
+  
   Template.ircPage.events({
+    //These events allow the send message and enter key to send messages to the irc channel
     'click #msg-btn': function(event, template) {
-      Meteor.call('sendMessage', template.find('#msg-bar').value, 'USER');
+      Meteor.call('sendMessage', template.find('#msg-bar').value);
       $('#msg-bar').val('');
     },
 
     'keypress #msg-bar': function(event, template) {
       if(event.charCode == 13){
-        Meteor.call('sendMessage', template.find('#msg-bar').value, 'USER');
+        Meteor.call('sendMessage', template.find('#msg-bar').value);
         $('#msg-bar').val('');
       }
     },
 
+    //Allows the user to clear the messages on the screen
+    'click #clear-btn' : function (event, template) {
+      Meteor.call('clearMessages');
+    }
+
+    /*,
     'click .logout-btn': function(e) {
 
       /*e.preventDefault();
@@ -106,12 +113,13 @@ if (Meteor.isClient) {
 
       if(result){
         window.close();
-      }*/
+      }
     },
 
     'click .msg-btn': function(e) {
 
     }
+    */
 
   });
 }

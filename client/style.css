@@ -1,4 +1,4 @@
-/* jakeIRC styles*/
+/* jakeIRC styles */
 
 body {
 	width: 100%;
@@ -45,7 +45,6 @@ body {
 	border-bottom-right-radius: 0px !important;
 	border-right: 0px !important;
 }
-
 
 .chat-window, .user-list, .channel-list {
 	height: 350px;
@@ -100,4 +99,9 @@ body {
 
 a:link, a:visited, a:active, a:hover {
 	text-decoration: none;
+}
+
+#clear-btn {
+	margin-top: 2.5px;
+	float: right;
 }
