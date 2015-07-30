@@ -1,93 +1,112 @@
 <!-- This is the main templare ircPage -->
 <template name="ircPage">
-	<div class ="row">
-		<div class = "col-xs-1"></div>
-		<!-- This is where the list of channels are displayed -->
-		<div class = "col-xs-2 channel-list">
+
+	<div class ="row category">
+		<div class = "col-xs-4 col-sm-3 col-md-2">
 			<h4> Channels </h4>
+		</div>
 
-			<hr />
+		<div class = "col-xs-5 col-sm-7 col-md-8">
+			<div class = "col-xs-5">
+				<h4> Messages </h4>
+			</div>
+
+			<div class = "col-xs-7">
+				<button type="button" class="btn btn-default" id="clear-btn">Clear</button>
+			</div>
+		</div>
+
+		<div class = "col-xs-3 col-sm-2">
+			<h4> Users </h4>
+		</div>
+	</div>
+
+	<div class ="row">
+		<!-- This is where the list of channels are displayed -->
+		<div class = "col-xs-4 col-sm-3 col-md-2 channel-list">
+
 			{{#each channels}}
-				<p> <a>{{channelname}}</a> </p>
+				<p> <a>{{channelname}}</a> <a class="glyphicon glyphicon-remove-sign close-channel"> </a></p> 
 			{{/each}}
-			<hr />
 
+			<!-- Future channel additions
+			<hr />	
 			<input class="form-control" placeholder="#channelName ..."> 
 			<p></p>
-			<button id="input-message">add channel</button>
-			<button id="input-message">remove channel</button>
+			<button type="button" class="btn btn-default" id="input-message">add channel</button>
+			-->
 		</div>
 
 		<!-- This is where the chat window is displayed -->
-		<div class = "col-xs-6 chat-window">
-			<h4> Messages </h4>
-
-			<hr />
+		<div class = "col-xs-5 col-sm-7 col-md-8 chat-window">	
 
 			{{#each messages}}
-				{{> listmsg}}
+				<p>{{this.message}}</p>
 			{{/each}}
-
-			<!-- {{#each messages}}
-				<p>{{this}}</p>
-			{{/each}} -->
 
 		</div>
 
 		<!-- This is where the list of users are displayed -->
-		<div class = "col-xs-2 user-list">
-			<h4> Users </h4>
+		<div class = "col-xs-3 col-sm-2 user-list">
 
-			<hr />
-
+			<div class="window-content">
 			{{#each users}}
-				<p>{{username}}</p>
+				<p>{{this}}</p>
 			{{/each}}
+			</div>
 
 		</div>
-		<div class = "col-xs-1"></div>
 	</div>	
 
 	<div class = "row">
-		<div class ="col-xs-1"></div>
-
-		<div class = "col-xs-10 input-field">
-
-			<div class="col-xs-2">
-				<p> Jake </p>
+	<!-- This is where the user is able to input messages -->
+		<div class = "col-xs-12 input-field">
+			<div class="col-xs-3 col-md-2">
+				<h4> [Arch]Client : </h4>
 			</div>
 
-			<div class="col-xs-8"> 
-				<input id="msg-bar" class="form-control col-xs-10" placeholder="enter text here..."> 
+			<div class="col-xs-7 col-md-8"> 
+				<input id="msg-bar" class="form-control col-xs-10" placeholder="enter message here..."> 
 			</div>
 
 			<div class = "col-xs-2"> 
-				<button id="msg-btn">enter</button>
+				<button type="button" class="btn btn-default" id="msg-btn">enter</button>
 			</div>
 		</div>
 
-		<div class ="col-xs-1"></div>
 	</div>
 
 </template>
 
-<!-- This template allows for the message to have multiple meteor parameters -->
-<template name="listmsg">
-	<p>{{timestamp}} | {{user}}: {{content}}</p>
-</template>
-
+<!-- This is the template for the navbar -->
 <template name="header">
 	<header class = "row">
-		<div class ="col-xs-1"></div>
-		<div class="col-xs-10 nav-bar">
-			<div class="col-xs-5">
+		<div class="col-xs-12 nav-bar">
+			<div class="col-xs-4">
 				<h4>Jake's IRC Client</h4>
 			</div>
-			<div class="col-xs-1">
-				<button>
-					<a>Menu</a>
-				</button>
+			<div class = "col-xs-8"></div>
+
+			<!-- Future menu additions
+
+			<div class = "col-xs-2 col-md-1">
+				<button type="button" class="btn btn-default" id="menu-btn">Menu</button>
 			</div>
+
+			<div class = "col-xs-2 col-md-1">
+				<button type="button" class="btn btn-default" id="server-btn">Server</button>
+			</div>
+
+			<div class = "col-xs-2 col-md-1">
+				<button type="button" class="btn btn-default" id="help-btn">Help</button>
+			</div>
+
+			<div class = "col-xs-2 col-md-1">
+				<button type="button" class="btn btn-default" id="logout-btn">Logout</button>
+			</div>-->
+
+			<!--<div class="col-xs-1">
+
 			<div class="col-xs-1">
 				<button>
 					<a>View</a>
@@ -95,20 +114,9 @@
 			</div>
 			<div class="col-xs-1">
 				<button>
-					<a>Server</a>
-				</button>
-			</div>
-			<div class="col-xs-1">
-				<button>
 					<a>Window</a>
 				</button>
-			</div>
-			<div class="col-xs-1">
-				<button>
-					<a>Help</a>
-				</button>
-			</div>
+			</div>-->
 		</div>
-		<div class ="col-xs-1"></div>
 	</header>
 </template>

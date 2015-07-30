@@ -1,58 +1,107 @@
-/* jakeIRC styles*/
+/* jakeIRC styles */
 
 body {
 	width: 100%;
-	margin: 0 auto;
+	margin: 5%;
+
+	min-width: 600px;
+
+	text-align: center;
+
 	overflow: hidden;
+    overflow-y: auto;
 }
 
-header {
-	margin-top: 5px;
+.row {
+	width: 90%;
+	text-align: left;
 }
 
-.chat-window, .user-list, .channel-list, .input-field, .nav-bar {
-	background: #E9E9E9;
+.category{
+	margin-bottom: 10px;
 }
 
-.chat-window, .user-list, .channel-list {
-	min-height: 400px;
+.chat-window, .user-list, .channel-list, .input-field, .nav-bar, .category {
+	background: #F8F8F8;
+}
 
+.chat-window, .user-list, .channel-list, .category {
 	border: 1px solid #000;
 	border-radius: 10px;
 }
 
-.user-list {
+.chat-window {
+	border-radius: 0px !important;
+}
 
+.user-list {
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+	border-left: 0px !important;
+}
+
+.channel-list {
+	border-top-right-radius: 0px !important;
+	border-bottom-right-radius: 0px !important;
+	border-right: 0px !important;
+}
+
+.chat-window, .user-list, .channel-list {
+	height: 350px;
+
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	overflow: hidden;
+    overflow-y: auto;
 }
 
 .input-field {
-	margin-top: 20px;
+	margin-top: 10px;
 	height: 60px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
 }
 
-.input-field button, .input-field p {
+.input-field button {
+	margin-top: 10px;
+}
+
+.input-field h4 {
 	margin-top: 15px;
 }
 
 .nav-bar {
 	height: 50px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
 }
 
 .nav-bar button {
-	margin-top: 10px;
+	margin-top: 7.5px;
 }
 
 .channel-list button {
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 .form-control {
 	margin-top: 10px !important;
+}
+
+.close-channel {
+	font-size: 125%;
+	float: right;
+}
+
+a:link, a:visited, a:active, a:hover {
+	text-decoration: none;
+}
+
+#clear-btn {
+	margin-top: 2.5px;
+	float: right;
 }
