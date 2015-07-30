@@ -6,6 +6,8 @@ channelList = [
 
 if (Meteor.isClient) {
 
+  var q = 0;
+
   Messages = new Mongo.Collection("messages");
   Users = new Mongo.Collection("users");
 
@@ -18,12 +20,19 @@ if (Meteor.isClient) {
       var cursor = Messages.find().fetch();
       var i = 0;
 
+      var windowHeight = 0;
+
       cursor.forEach(function(document) {
           var time = formatTime(document.time);
 
           pulledMessages.push({
             message: time + document.from + ': ' + document.message, position: i
           });
+
+          if (q < i) {
+            scrollBottom();
+            q = i;
+          }
 
           i++;
       });
@@ -54,17 +63,10 @@ if (Meteor.isClient) {
     },
     channels : channelList
   });
-  
-  Template.ircPage.rendered = function () {
 
-    /*$('.msg-btn')."click"(function(e) {
-
-        $("chat-window").animate({
-          "scrollBottom": window.scrollY+300 }, 
-        1000);
-
-        return false;
-    });*/
+  //when a message is entered, scroll to the bottom
+  function scrollBottom() {
+    $(".chat-window").animate({scrollTop:$(".chat-window")[0].scrollHeight}, $(".chat-window").height());
   }
   
   function formatTime(milli) {
@@ -97,14 +99,18 @@ if (Meteor.isClient) {
       }
     },
 
-    'click .logout-btn': function(event, template) {
-      e.preventDefault();
+    'click .logout-btn': function(e) {
+
+      /*e.preventDefault();
       var result = confirm("Are you sure you want to logout?");
 
-      // If they want to logout, log them out and redirect them to the login screen
       if(result){
         window.close();
-      }
+      }*/
+    },
+
+    'click .msg-btn': function(e) {
+
     }
 
   });

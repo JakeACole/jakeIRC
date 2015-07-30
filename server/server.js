@@ -1,4 +1,5 @@
 //Server
+//meteor deploy jakeirc.meteor.com
 
 if (Meteor.isServer) {
 
@@ -16,7 +17,7 @@ if (Meteor.isServer) {
     debug: false,
     showErrors: false,
     autoRejoin: false,
-    autoConnect: true,
+    autoConnect: false,
     secure: false,
     selfSigned: false,
     certExpired: false,
@@ -33,7 +34,7 @@ if (Meteor.isServer) {
     client.activateFloodProtection();
   }*/
 
-  if (client.opt.autoConnect === true) {
+  //if (client.opt.autoConnect === true) {
     client.connect();
     Messages.remove({});
     Users.remove({});
@@ -41,7 +42,7 @@ if (Meteor.isServer) {
       nicks: ""
     });
     logMessage('Server', 'Connected to #winter-irc-test');
-  }
+  //}
 
   //catches errors
   client.addListener('error', Meteor.bindEnvironment (function(message) {
@@ -103,3 +104,4 @@ if (Meteor.isServer) {
     });
   }
 }
+
