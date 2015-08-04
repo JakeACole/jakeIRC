@@ -93,11 +93,7 @@ if (Meteor.isClient) {
       $('#user-name').val('');
       $('#server-name').val('');
       $('#channel-name').val('');
-
-      /*Meteor.call('ircConnect', template.find('#server-name').value);
-      $('#server-name').val('');
-      Meteor.call('ircConnect', template.find('#channel-name').value);
-      $('#channel-name').val('');*/
+      Router.go('irc');
     }
 
   });  
@@ -124,12 +120,12 @@ if (Meteor.isClient) {
   });
 
   Template.header.events({
-        'click #menu-btn': function(event, template) {
+        'click #irc-btn': function(event, template) {
             event.preventDefault();
             Router.go('irc');
         },
 
-        'click #server-btn': function(event, template) {
+        'click #connect-btn': function(event, template) {
             event.preventDefault();
             Router.go('connect');
         },
@@ -148,6 +144,7 @@ if (Meteor.isClient) {
             Meteor.call('ircLogout');
           }*/
           Meteor.call('ircLogout');
+          Router.go('connect');
         }
 
     });
