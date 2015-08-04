@@ -12,7 +12,42 @@ if (Meteor.isServer) {
   var irc = Meteor.require('irc');
 
   var currentUser = '[Arch]Client', currentServer = 'irc.freenode.net', currentChannel = '#winter-irc-test';
-  ircGG();
+  var client = ircGG();
+
+    //Meteor Methods
+  Meteor.methods({
+    'ircConnect' : function(user, server, channel) {
+      console.log('Connection Information: ' + user + '' + server + '' + channel);
+
+      currentUser = user;
+      currentServer = server;
+      currentChannel = channel;
+
+      loggedIn = true;
+      client = ircGG();
+      //Router.go('irc');
+    },
+
+    //Allows the client to send a message 
+    'sendMessage': function(message) {
+      client.say(currentChannel, message);
+      console.log(currentUser + ' => ' + currentChannel + ': ' + message);
+      logMessage('< ' + currentUser, message);
+    },
+
+    //Allows the client to clear the messages
+    'clearMessages' : function() {
+      Messages.remove({});
+    },
+
+    'ircLogout' : function() {
+      logMessage(currentUser, 'You have left the channel');
+      loggedIn = false;
+      client.disconnect();
+      //
+    }
+
+  });
 
   function ircGG() {
     if(loggedIn == true) {
@@ -70,7 +105,9 @@ if (Meteor.isServer) {
       client.addListener('part' + currentChannel, Meteor.bindEnvironment(function (nick) {
         logMessage(nick, 'has left the channel');
       }));
+      return client;
     }
+    return null;
   }
 
   //Inserts a message into the collection
@@ -100,40 +137,5 @@ if (Meteor.isServer) {
       {nicks: userAra}
     });
   }
-  
-  //Meteor Methods
-  Meteor.methods({
-    'ircConnect' : function(user, server, channel) {
-      console.log('Connection Information: ' + user + '' + server + '' + channel);
-
-      currentUser = user;
-      currentServer = server;
-      currentChannel = channel;
-
-      loggedIn = true;
-      ircGG();
-      //Router.go('irc');
-    },
-
-    //Allows the client to send a message 
-    'sendMessage': function(message) {
-      client.say(currentChannel, message);
-      console.log(currentUser + ' => ' + currentChannel + ': ' + message);
-      logMessage('< ' + currentUser, message);
-    },
-
-    //Allows the client to clear the messages
-    'clearMessages' : function() {
-      Messages.remove({});
-    },
-
-    'ircLogout' : function() {
-      logMessage(currentUser, 'You have left the channel');
-      loggedIn = false;
-      client.disconnect();
-      //
-    }
-
-  });
 
 }
