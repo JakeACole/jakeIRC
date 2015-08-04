@@ -7,10 +7,11 @@
 meteor-platform
 autopublish
 insecure
+jquery
+iron:router
+twbs:bootstrap
 mrt:meteor-node-irc
 mrt:jquery-ui
-jquery
-twbs:bootstrap
 jameslefrere:irc
 meteorhacks:npm
 npm-container

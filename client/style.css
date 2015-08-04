@@ -47,7 +47,7 @@ body {
 }
 
 .chat-window, .user-list, .channel-list {
-	height: 350px;
+	height: 275px;
 
 	padding-top: 5px;
 	padding-bottom: 5px;
