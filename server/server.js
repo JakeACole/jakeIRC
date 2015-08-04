@@ -9,42 +9,37 @@ if (Meteor.isServer) {
   Users = new Mongo.Collection("users");
 
   //var irc = Meteor.npmRequire("irc");
-  var irc = Meteor.require("irc");
+  var irc = Meteor.require('irc');
+  //var clientDefined = 0;
+  var currentUser = '[Arch]Client', currentServer = 'irc.freenode.net', currentChannel = '#winter-irc-test';
 
-  //This initializes the IRC client 
-  var client = new irc.Client('irc.freenode.net', '[Arch]Client', {
-    port: 6667,
-    channels: ['#winter-irc-test'],
-    localAddress: null,
-    debug: false,
-    showErrors: false,
-    autoRejoin: false,
-    autoConnect: false,
-    secure: false,
-    selfSigned: false,
-    certExpired: false,
-    floodProtection: false,
-    floodProtectionDelay: 1000,
-    sasl: false,
-    stripColors: false,
-    channelPrefixes: "&#",
-    messageSplit: 512,
-    encoding: ''
+  var client = new irc.Client(currentServer, currentUser, {
+      port: 6667,
+      channels: [currentChannel],
+      localAddress: null,
+      debug: false,
+      showErrors: false,
+      autoRejoin: false,
+      autoConnect: false,
+      secure: false,
+      selfSigned: false,
+      certExpired: false,
+      floodProtection: false,
+      floodProtectionDelay: 1000,
+      sasl: false,
+      stripColors: false,
+      channelPrefixes: "&#",
+      messageSplit: 512,
+      encoding: ''
   });
- 
+
   //This allows the irc client to connect
-
   client.connect();
-
   Messages.remove({});
   Users.remove({});
-
-  Users.insert({
-    nicks: ""
-  });
-
-  logMessage('Server', 'Connected to #winter-irc-test');
-
+  Users.insert({nicks:""});
+  logMessage('Server', 'Connected to' + currentChannel);
+  
   //catches errors that the client may throw
   client.addListener('error', Meteor.bindEnvironment (function(message) {
     console.log('error: ', message);
@@ -53,38 +48,81 @@ if (Meteor.isServer) {
   //Listener adds messages to the collection
   client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
     console.log(from + ' => ' + to + ': ' + message);
-    logMessage(from, message);
+    logMessage('> ' + from, message);
   }));
 
   //Listener adds users to the collection
-  client.addListener('names#winter-irc-test', Meteor.bindEnvironment(function (nicks) {
+  client.addListener('names' + currentChannel, Meteor.bindEnvironment(function (nicks) {
     console.log(nicks);
     updateUsers(nicks);
   }));
 
   //Listener alerts user when a person joins the channel
-  client.addListener('join#winter-irc-test', Meteor.bindEnvironment(function (nick) {
+  client.addListener('join' + currentChannel, Meteor.bindEnvironment(function (nick) {
     logMessage(nick, 'has joined the channel');
   }));
 
   //Listener alerts user when a person leaves the channel
-  client.addListener('part#winter-irc-test', Meteor.bindEnvironment(function (nick) {
+  client.addListener('part' + currentChannel, Meteor.bindEnvironment(function (nick) {
     logMessage(nick, 'has left the channel');
   }));
   
   //Meteor Methods
   Meteor.methods({
+    'ircConnect' : function(user, server, channel) {
+      console.log('This is stuff:' + user + server + channel);
+      //This initializes the IRC client 
+      /*var client = new irc.Client(server, channel, {
+        port: 6667,
+        channels: [channel],
+        localAddress: null,
+        debug: false,
+        showErrors: false,
+        autoRejoin: false,
+        autoConnect: false,
+        secure: false,
+        selfSigned: false,
+        certExpired: false,
+        floodProtection: false,
+        floodProtectionDelay: 1000,
+        sasl: false,
+        stripColors: false,
+        channelPrefixes: "&#",
+        messageSplit: 512,
+        encoding: ''
+      });
+
+      clientDefined = 1;
+
+      currentUser = user;
+      currentServer = server;
+      currentChannel = channel;
+
+      //This allows the irc client to connect
+      client.connect();
+      Messages.remove({});
+      Users.remove({});
+      Users.insert({nicks:""});
+      logMessage('> Server', 'Connected to #winter-irc-test');*/
+    },
+
     //Allows the client to send a message 
     'sendMessage': function(message) {
-      client.say('#winter-irc-test', message);
-      console.log('[Arch]Client' + ' => ' + '#winter-irc-test' + ': ' + message);
-      logMessage('[Arch]Client', message);
+      client.say(currentChannel, message);
+      console.log(currentUser + ' => ' + currentChannel + ': ' + message);
+      logMessage('< ' + currentUser, message);
     },
 
     //Allows the client to clear the messages
     'clearMessages' : function() {
       Messages.remove({});
+    },
+
+    'ircLogout' : function() {
+      logMessage(currentUser, 'You have left the channel');
+      client.disconnect();
     }
+
   });
 
   //Inserts a message into the collection

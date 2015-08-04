@@ -14,7 +14,7 @@ if (Meteor.isClient) {
   Users = new Mongo.Collection("users");
 
   //These helpers allow meteor objects to display on the GUI
-  Template.ircPage.helpers({
+  Template.irc.helpers({
 
     //Helper renders the messages in the chat window
     messages: function() {
@@ -85,8 +85,24 @@ if (Meteor.isClient) {
     return '[' + date.getHours() + ':' + minutes + ':' + seconds + '] ';
   }
 
-  
-  Template.ircPage.events({
+  Template.connect.events({
+    //These events allow the send message and enter key to send messages to the irc channel
+    'click #connect-btn': function(event, template) {
+      Meteor.call('ircConnect', template.find('#user-name').value, 
+      template.find('#server-name').value, template.find('#channel-name').value);
+      $('#user-name').val('');
+      $('#server-name').val('');
+      $('#channel-name').val('');
+
+      /*Meteor.call('ircConnect', template.find('#server-name').value);
+      $('#server-name').val('');
+      Meteor.call('ircConnect', template.find('#channel-name').value);
+      $('#channel-name').val('');*/
+    }
+
+  });  
+
+  Template.irc.events({
     //These events allow the send message and enter key to send messages to the irc channel
     'click #msg-btn': function(event, template) {
       Meteor.call('sendMessage', template.find('#msg-bar').value);
@@ -105,21 +121,34 @@ if (Meteor.isClient) {
       Meteor.call('clearMessages');
     }
 
-    /*,
-    'click .logout-btn': function(e) {
-
-      /*e.preventDefault();
-      var result = confirm("Are you sure you want to logout?");
-
-      if(result){
-        window.close();
-      }
-    },
-
-    'click .msg-btn': function(e) {
-
-    }
-    */
-
   });
+
+  Template.header.events({
+        'click #menu-btn': function(event, template) {
+            event.preventDefault();
+            Router.go('irc');
+        },
+
+        'click #server-btn': function(event, template) {
+            event.preventDefault();
+            Router.go('connect');
+        },
+
+        'click #help-btn': function(event, template) {
+            event.preventDefault();
+            Router.go('help');
+        },
+
+        //Allows the user to clear the messages on the screen
+        'click #logout-btn' : function (event, template) {
+          /*e.preventDefault();
+          var result = confirm("Are you sure you want to logout?");
+
+          if(result){
+            Meteor.call('ircLogout');
+          }*/
+          Meteor.call('ircLogout');
+        }
+
+    });
 }

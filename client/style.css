@@ -21,7 +21,8 @@ body {
 	margin-bottom: 10px;
 }
 
-.chat-window, .user-list, .channel-list, .input-field, .nav-bar, .category {
+.chat-window, .user-list, .channel-list, .input-field,
+.connect-field, .help-field, .nav-bar, .category {
 	background: #F8F8F8;
 }
 
@@ -64,7 +65,28 @@ body {
 	border-radius: 10px;
 }
 
-.input-field button {
+.connect-field {
+	margin-top: 10px;
+	height: 200px;
+
+	border: 1px solid #000;
+	border-radius: 10px;
+}
+
+.help-field {
+	margin-top: 10px;
+	min-height: 500px;
+
+	border: 1px solid #000;
+	border-radius: 10px;
+}
+
+.help-field h1 {
+	margin-bottom: 20px;
+}
+
+.input-field button,
+.connect-field button {
 	margin-top: 10px;
 }
 
@@ -97,7 +119,8 @@ body {
 	float: right;
 }
 
-a:link, a:visited, a:active, a:hover {
+a:link, a:visited, 
+a:active, a:hover {
 	text-decoration: none;
 }
 
