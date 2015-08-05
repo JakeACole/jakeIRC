@@ -1,26 +1,24 @@
 //Meteor Server JS
-
 //meteor deploy jakeirc.meteor.com
 
 if (Meteor.isServer) {
 
-  //Mongo Collections that store the users and messages
+  //Mongo Collections that store the users, messages and channels
   Messages = new Mongo.Collection("messages");
   Users = new Mongo.Collection("users");
   Channels = new Mongo.Collection("channels");
 
-  //var irc = Meteor.npmRequire("irc");
-  var loggedIn = false;
-  var irc = Meteor.require('irc');
+  //var irc = Meteor.require('irc');
+  var irc = Meteor.npmRequire("irc");
 
-  var currentUser = '[Arch]Client', currentServer = 'irc.freenode.net', currentChannel = '#winter-irc-test';
+  var loggedIn = false;
+
+  var currentUser = '', currentServer = '', currentChannel = '';
   var client = ircAdd();
 
-    //Meteor Methods
+  //Meteor Methods
   Meteor.methods({
     'ircConnect' : function(user, server, channel) {
-      console.log('Connection Information: ' + user + ' ' + server + ' ' + channel);
-
       currentUser = user;
       currentServer = server;
       currentChannel = channel;
@@ -51,8 +49,11 @@ if (Meteor.isServer) {
 
   });
   
+  //Adds a new IRC client if the user is logged in  
   function ircAdd() {
+
     if(loggedIn == true) {
+
       var client = new irc.Client(currentServer, currentUser, {
           port: 6667,
           channels: [currentChannel],
@@ -75,11 +76,11 @@ if (Meteor.isServer) {
 
       //This allows the irc client to connect
       client.connect();
-      clearDB();
 
+      clearDB();
       updateChannel(currentChannel);
 
-      logMessage('Server', 'Connected to' + currentChannel);
+      logMessage('Server', 'Connected to ' + currentChannel);
       
       //catches errors that the client may throw
       client.addListener('error', Meteor.bindEnvironment (function(message) {
@@ -107,11 +108,14 @@ if (Meteor.isServer) {
       client.addListener('part' + currentChannel, Meteor.bindEnvironment(function (nick) {
         logMessage(nick, 'has left the channel');
       }));
+
       return client;
     }
+
     return null;
   }
 
+  //This clears the mongo DBs
   function clearDB () {
     Messages.remove({});
     Users.remove({});
@@ -130,6 +134,7 @@ if (Meteor.isServer) {
     });
   }
 
+  //Updates the channel list
   function updateChannel (channel) {
     var channelAra = [];
 

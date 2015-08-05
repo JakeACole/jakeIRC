@@ -12,12 +12,17 @@ body {
     overflow-y: auto;
 }
 
+h1, h2, h3, h4, p {
+	color: #222222;
+}
+
 .row {
 	width: 90%;
 	text-align: left;
 }
 
 .category{
+	height: 45px;
 	margin-bottom: 10px;
 }
 
@@ -33,6 +38,7 @@ body {
 
 .chat-window {
 	border-radius: 0px !important;
+	font-size: 120%;
 }
 
 .user-list {
@@ -48,7 +54,7 @@ body {
 }
 
 .chat-window, .user-list, .channel-list {
-	height: 350px;
+	height: 330px;
 
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -65,9 +71,16 @@ body {
 	border-radius: 10px;
 }
 
+.connect-field h2 {
+	margin-bottom: 20px;
+}
+
+.connect-field button {
+	margin-bottom: 20px;
+}
+
 .connect-field {
 	margin-top: 10px;
-	height: 250px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
@@ -82,6 +95,10 @@ body {
 
 .help-field h1 {
 	margin-bottom: 20px;
+}
+
+.help-field p {
+	margin-bottom: 10px;
 }
 
 .input-field button,
@@ -114,7 +131,7 @@ body {
 }
 
 .close-channel {
-	font-size: 125%;
+	margin-top: 2px;
 	float: right;
 }
 

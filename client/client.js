@@ -15,8 +15,7 @@ if (Meteor.isClient) {
 
     //Helper renders the messages in the chat window
     messages: function() {
-      var pulledMessages = [];
-        
+      var pulledMessages = [];       
       var cursor = Messages.find().fetch();
       var i = 0;
 
@@ -26,13 +25,11 @@ if (Meteor.isClient) {
           pulledMessages.push({
             message: time + document.from + ': ' + document.message, position: i
           });
-
           //Scrolls to the bottom if a new message has been added
           if (msgCounter < i) {
             scrollBottom();
             msgCounter = i;
           }
-
           i++;
       });
 
@@ -42,16 +39,13 @@ if (Meteor.isClient) {
     //Helper renders the current user list
     users : function() {
       var pulledUsers = [];
-
       var cursor = Users.find().fetch();
       var i = 0;
 
       cursor.forEach(function(document) {
-
         for (index = 0; index < document.nicks.length; ++index) {
           pulledUsers.push(document.nicks[index]);
         }
-
         i++;
       });
 
@@ -60,22 +54,18 @@ if (Meteor.isClient) {
 
     channels : function() {
       var pulledChannels = [];
-
       var cursor = Channels.find().fetch();
       var i = 0;
 
       cursor.forEach(function(document) {
-
         for (index = 0; index < document.channel.length; ++index) {
           pulledChannels.push(document.channel[index]);
         }
-
         i++;
       });
 
       return pulledChannels.slice();
     }
-
   });
 
   //When a message is entered, scroll to the bottom
@@ -130,37 +120,36 @@ if (Meteor.isClient) {
     //Allows the user to clear the messages on the screen
     'click #clear-btn' : function (event, template) {
       Meteor.call('clearMessages');
+    },
+
+    //Allows the user to close the current channel
+    'click .close-channel' : function (event, template) {
+      Meteor.call('ircLogout');
+      Router.go('connect');
     }
 
   });
 
-  Template.header.events({
-        'click #irc-btn': function(event, template) {
-            event.preventDefault();
-            Router.go('irc');
-        },
+  Template.header.events({ 
+    //Relocates the user when they click on the header buttons
+    'click #irc-btn': function(event, template) {
+        event.preventDefault();
+        Router.go('irc');
+    },
 
-        'click #connect-btn': function(event, template) {
-            event.preventDefault();
-            Router.go('connect');
-        },
+    'click #connect-btn': function(event, template) {
+        event.preventDefault();
+        Router.go('connect');
+    },
 
-        'click #help-btn': function(event, template) {
-            event.preventDefault();
-            Router.go('help');
-        },
+    'click #help-btn': function(event, template) {
+        event.preventDefault();
+        Router.go('help');
+    },
 
-        //Allows the user to clear the messages on the screen
-        'click #logout-btn' : function (event, template) {
-          /*e.preventDefault();
-          var result = confirm("Are you sure you want to logout?");
-
-          if(result){
-            Meteor.call('ircLogout');
-          }*/
-          Meteor.call('ircLogout');
-          Router.go('connect');
-        }
-
-    });
+    'click #logout-btn' : function (event, template) {
+      Meteor.call('ircLogout');
+      Router.go('connect');
+    }
+  });
 }
