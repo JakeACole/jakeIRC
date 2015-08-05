@@ -1,4 +1,5 @@
 //Meteor Server JS
+
 //meteor deploy jakeirc.meteor.com
 
 if (Meteor.isServer) {
@@ -6,25 +7,26 @@ if (Meteor.isServer) {
   //Mongo Collections that store the users and messages
   Messages = new Mongo.Collection("messages");
   Users = new Mongo.Collection("users");
+  Channels = new Mongo.Collection("channels");
 
   //var irc = Meteor.npmRequire("irc");
   var loggedIn = false;
   var irc = Meteor.require('irc');
 
   var currentUser = '[Arch]Client', currentServer = 'irc.freenode.net', currentChannel = '#winter-irc-test';
-  var client = ircGG();
+  var client = ircAdd();
 
     //Meteor Methods
   Meteor.methods({
     'ircConnect' : function(user, server, channel) {
-      console.log('Connection Information: ' + user + '' + server + '' + channel);
+      console.log('Connection Information: ' + user + ' ' + server + ' ' + channel);
 
       currentUser = user;
       currentServer = server;
       currentChannel = channel;
 
       loggedIn = true;
-      client = ircGG();
+      client = ircAdd();
       //Router.go('irc');
     },
 
@@ -43,13 +45,13 @@ if (Meteor.isServer) {
     'ircLogout' : function() {
       logMessage(currentUser, 'You have left the channel');
       loggedIn = false;
+      clearDB();
       client.disconnect();
-      //
     }
 
   });
-
-  function ircGG() {
+  
+  function ircAdd() {
     if(loggedIn == true) {
       var client = new irc.Client(currentServer, currentUser, {
           port: 6667,
@@ -73,9 +75,9 @@ if (Meteor.isServer) {
 
       //This allows the irc client to connect
       client.connect();
-      Messages.remove({});
-      Users.remove({});
-      Users.insert({nicks:""});
+      clearDB();
+
+      updateChannel(currentChannel);
 
       logMessage('Server', 'Connected to' + currentChannel);
       
@@ -110,6 +112,15 @@ if (Meteor.isServer) {
     return null;
   }
 
+  function clearDB () {
+    Messages.remove({});
+    Users.remove({});
+    Channels.remove({});
+
+    Users.insert({nicks:""});
+    Channels.insert({channel:""});
+  }
+
   //Inserts a message into the collection
   function logMessage(from, message) {
     Messages.insert({
@@ -117,6 +128,19 @@ if (Meteor.isServer) {
         message: message,
         time: Date.now()
     });
+  }
+
+  function updateChannel (channel) {
+    var channelAra = [];
+
+    channelAra.push(channel);
+    var userId = Channels.findOne();
+
+    //Updates the Channels object
+    Channels.update(userId._id, {$set: 
+      {channel: channelAra}
+    });
+
   }
 
   //Updates the userlist 

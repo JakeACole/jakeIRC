@@ -1,9 +1,5 @@
 //Meteor Client JS
 
-channelList = [
-  {channelname: '#winter-irc-test'}
-];
-
 if (Meteor.isClient) {
 
   //Used for the scrollBottom() function
@@ -12,6 +8,7 @@ if (Meteor.isClient) {
   //Allows client to access mongo collections
   Messages = new Mongo.Collection("messages");
   Users = new Mongo.Collection("users");
+  Channels = new Mongo.Collection("channels");
 
   //These helpers allow meteor objects to display on the GUI
   Template.irc.helpers({
@@ -60,7 +57,25 @@ if (Meteor.isClient) {
 
       return pulledUsers.slice();
     },
-    channels : channelList
+
+    channels : function() {
+      var pulledChannels = [];
+
+      var cursor = Channels.find().fetch();
+      var i = 0;
+
+      cursor.forEach(function(document) {
+
+        for (index = 0; index < document.channel.length; ++index) {
+          pulledChannels.push(document.channel[index]);
+        }
+
+        i++;
+      });
+
+      return pulledChannels.slice();
+    }
+
   });
 
   //When a message is entered, scroll to the bottom
