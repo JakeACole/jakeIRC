@@ -48,7 +48,7 @@ body {
 }
 
 .chat-window, .user-list, .channel-list {
-	height: 275px;
+	height: 350px;
 
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -67,7 +67,7 @@ body {
 
 .connect-field {
 	margin-top: 10px;
-	height: 200px;
+	height: 250px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
@@ -75,7 +75,6 @@ body {
 
 .help-field {
 	margin-top: 10px;
-	min-height: 500px;
 
 	border: 1px solid #000;
 	border-radius: 10px;
