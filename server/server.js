@@ -11,21 +11,19 @@ if (Meteor.isServer) {
   //var irc = Meteor.require('irc');
   var irc = Meteor.npmRequire("irc");
 
-  var loggedIn = false;
+  var isConnected = false;
 
   var currentUser = '', currentServer = '', currentChannel = '';
   var client = ircAdd();
 
-  //Meteor Methods
   Meteor.methods({
     'ircConnect' : function(user, server, channel) {
       currentUser = user;
       currentServer = server;
       currentChannel = channel;
 
-      loggedIn = true;
+      isConnected = true;
       client = ircAdd();
-      //Router.go('irc');
     },
 
     //Allows the client to send a message 
@@ -42,7 +40,7 @@ if (Meteor.isServer) {
 
     'ircLogout' : function() {
       logMessage(currentUser, 'You have left the channel');
-      loggedIn = false;
+      isConnected = false;
       clearDB();
       client.disconnect();
     }
@@ -52,7 +50,7 @@ if (Meteor.isServer) {
   //Adds a new IRC client if the user is logged in  
   function ircAdd() {
 
-    if(loggedIn == true) {
+    if(isConnected == true) {
 
       var client = new irc.Client(currentServer, currentUser, {
           port: 6667,
