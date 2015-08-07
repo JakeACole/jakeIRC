@@ -164,9 +164,5 @@ if (Meteor.isServer) {
       {nicks: userAra}
     });
   }
-<<<<<<< HEAD
-}
-=======
 
 }
->>>>>>> dev
