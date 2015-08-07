@@ -1,5 +1,5 @@
-<!-- This is the main templare ircPage -->
-<template name="ircPage">
+<!-- This is the main template for the irc -->
+<template name="irc">
 
 	<div class ="row category">
 		<div class = "col-xs-4 col-sm-3 col-md-2">
@@ -21,40 +21,38 @@
 		</div>
 	</div>
 
-	<div class ="row">
-		<!-- This is where the list of channels are displayed -->
-		<div class = "col-xs-4 col-sm-3 col-md-2 channel-list">
-
-			{{#each channels}}
-				<p> <a>{{channelname}}</a> <a class="glyphicon glyphicon-remove-sign close-channel"> </a></p> 
-			{{/each}}
-
-			<!-- Future channel additions
+	<!-- Future channel additions
 			<hr />	
 			<input class="form-control" placeholder="#channelName ..."> 
 			<p></p>
 			<button type="button" class="btn btn-default" id="input-message">add channel</button>
 			-->
+			
+	<div class ="row">
+		<!-- This is where the list of channels are displayed -->
+		<div class = "col-xs-4 col-sm-3 col-md-2 channel-list">
+			{{#each channels}}
+				<p> 
+					<a>{{this}}</a> 
+					<a class="glyphicon glyphicon-remove-sign close-channel"> </a> 
+				</p> 
+			{{/each}}
 		</div>
 
 		<!-- This is where the chat window is displayed -->
 		<div class = "col-xs-5 col-sm-7 col-md-8 chat-window">	
-
 			{{#each messages}}
 				<p>{{this.message}}</p>
 			{{/each}}
-
 		</div>
 
 		<!-- This is where the list of users are displayed -->
 		<div class = "col-xs-3 col-sm-2 user-list">
-
 			<div class="window-content">
 			{{#each users}}
 				<p>{{this}}</p>
 			{{/each}}
 			</div>
-
 		</div>
 	</div>	
 
@@ -62,7 +60,7 @@
 	<!-- This is where the user is able to input messages -->
 		<div class = "col-xs-12 input-field">
 			<div class="col-xs-3 col-md-2">
-				<h4> [Arch]Client : </h4>
+				<h4> Chat: </h4>
 			</div>
 
 			<div class="col-xs-7 col-md-8"> 
@@ -76,47 +74,4 @@
 
 	</div>
 
-</template>
-
-<!-- This is the template for the navbar -->
-<template name="header">
-	<header class = "row">
-		<div class="col-xs-12 nav-bar">
-			<div class="col-xs-4">
-				<h4>Jake's IRC Client</h4>
-			</div>
-			<div class = "col-xs-8"></div>
-
-			<!-- Future menu additions
-
-			<div class = "col-xs-2 col-md-1">
-				<button type="button" class="btn btn-default" id="menu-btn">Menu</button>
-			</div>
-
-			<div class = "col-xs-2 col-md-1">
-				<button type="button" class="btn btn-default" id="server-btn">Server</button>
-			</div>
-
-			<div class = "col-xs-2 col-md-1">
-				<button type="button" class="btn btn-default" id="help-btn">Help</button>
-			</div>
-
-			<div class = "col-xs-2 col-md-1">
-				<button type="button" class="btn btn-default" id="logout-btn">Logout</button>
-			</div>-->
-
-			<!--<div class="col-xs-1">
-
-			<div class="col-xs-1">
-				<button>
-					<a>View</a>
-				</button>
-			</div>
-			<div class="col-xs-1">
-				<button>
-					<a>Window</a>
-				</button>
-			</div>-->
-		</div>
-	</header>
 </template>
