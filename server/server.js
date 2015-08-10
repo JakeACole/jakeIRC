@@ -28,9 +28,13 @@ if (Meteor.isServer) {
 
     //Allows the client to send a message 
     'sendMessage': function(message) {
-      client.say(currentChannel, message);
-      console.log(currentUser + ' => ' + currentChannel + ': ' + message);
-      logMessage('< ' + currentUser, message);
+      if (message[0] == '/') {
+      }
+      else {
+        client.say(currentChannel, message);
+        console.log(currentUser + ' => ' + currentChannel + ': ' + message);
+        logMessage('< ' + currentUser, message);
+      } 
     },
 
     //Allows the client to clear the messages
@@ -87,13 +91,18 @@ if (Meteor.isServer) {
 
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
-        console.log(from + ' => ' + to + ': ' + message);
-        logMessage('> ' + from, message);
+        //console.log(from + ' => ' + to + ': ' + message);
+        if (message[0] == '/') {
+          commandResponse(from, message);
+        }
+        else {
+          logMessage('> ' + from, message);
+        }
       }));
 
       //Listener adds users to the collection
       client.addListener('names' + currentChannel, Meteor.bindEnvironment(function (nicks) {
-        console.log(nicks);
+        //console.log(nicks);
         updateUsers(nicks);
       }));
 
@@ -130,6 +139,37 @@ if (Meteor.isServer) {
         message: message,
         time: Date.now()
     });
+  }
+
+  function commandResponse(from, message) {
+    // If a command has parameters, then chop the first word of the message off to get the raw command,
+    // otherwise just take the raw command
+
+    /*if((message.toLowerCase().indexOf(' ') > -1)) {
+        var command = message.substr(1, message.indexOf(' ')).toLowerCase();
+    }else {
+        var command = message.substr(1, message.length - 1).toLowerCase();
+    }*/
+
+    var reply = '';
+
+    // Set reponses for commands
+    switch(command) {
+      case 'help':
+        reply = "click the help button in the navbar for additional help";
+        break;
+      case 'message': 
+        reply = "write the message function kappa";
+        break;
+      case 'command':
+        reply = "the current command list has: /help, /message, /command";
+      default:
+        reply = "Unknown command, for the command list type /command";
+        break;
+    }
+    
+    logMessage('server', reply);
+    //Meteor.call('sendMessage', response, 'RESP');
   }
 
   //Updates the channel list
