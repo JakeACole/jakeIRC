@@ -17,6 +17,7 @@ if (Meteor.isServer) {
   var client = ircAdd();
 
   Meteor.methods({
+    //Allows the client to connect to a specified channel
     'ircConnect' : function(user, server, channel) {
       currentUser = user;
       currentServer = server;
@@ -28,13 +29,19 @@ if (Meteor.isServer) {
 
     //Allows the client to send a message 
     'sendMessage': function(message) {
-      if (message[0] == '/') {
-      }
+      if (isConnected == true) {
+        if (message[0] == '/') {
+          commandResponse(message);
+          console.log("Calling from here");
+        }
+        else {
+          client.say(currentChannel, message);
+          console.log(currentUser + ' => ' + currentChannel + ': ' + message);
+          logMessage('< ' + currentUser, message);
+        } 
       else {
-        client.say(currentChannel, message);
-        console.log(currentUser + ' => ' + currentChannel + ': ' + message);
-        logMessage('< ' + currentUser, message);
-      } 
+        logMessage('Server ', 'you are not connected yet, please wait to send another message.');
+      }
     },
 
     //Allows the client to clear the messages
@@ -82,7 +89,7 @@ if (Meteor.isServer) {
       clearDB();
       updateChannel(currentChannel);
 
-      logMessage('Server', 'Connected to ' + currentChannel);
+      logMessage('Server ', 'Connecting to ' + currentChannel);
       
       //catches errors that the client may throw
       client.addListener('error', Meteor.bindEnvironment (function(message) {
@@ -92,12 +99,7 @@ if (Meteor.isServer) {
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
         //console.log(from + ' => ' + to + ': ' + message);
-        if (message[0] == '/') {
-          commandResponse(from, message);
-        }
-        else {
-          logMessage('> ' + from, message);
-        }
+        logMessage('> ' + from, message);
       }));
 
       //Listener adds users to the collection
@@ -141,34 +143,43 @@ if (Meteor.isServer) {
     });
   }
 
-  function commandResponse(from, message) {
-    // If a command has parameters, then chop the first word of the message off to get the raw command,
+  // 
+  function commandResponse(message) {
+    // If a command has parameters, then chop the first word of
+    // the message off to get the raw command,
     // otherwise just take the raw command
 
-    /*if((message.toLowerCase().indexOf(' ') > -1)) {
-        var command = message.substr(1, message.indexOf(' ')).toLowerCase();
-    }else {
-        var command = message.substr(1, message.length - 1).toLowerCase();
-    }*/
+    if((message.toLowerCase().indexOf(' ') > -1)) {
+      var command = message.substr(1, message.indexOf(' ')).toLowerCase();
+    }
 
-    var reply = '';
+    else {
+      var command = message.substr(1, message.length - 1).toLowerCase();
+    }
+
+    console.log("test bruh");
+    var reply = 'dude';
 
     // Set reponses for commands
     switch(command) {
+      case 'command':
+        reply = "the current command list has: /help, /message, /command";
+        break;
       case 'help':
         reply = "click the help button in the navbar for additional help";
         break;
+      case 'kick':
+        reply = "kappa kappa kappa";
+        break;
       case 'message': 
         reply = "write the message function kappa";
-        break;
-      case 'command':
-        reply = "the current command list has: /help, /message, /command";
+        break;      
       default:
         reply = "Unknown command, for the command list type /command";
         break;
     }
     
-    logMessage('server', reply);
+    logMessage('Server ', reply);
     //Meteor.call('sendMessage', response, 'RESP');
   }
 
