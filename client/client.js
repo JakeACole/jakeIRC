@@ -131,22 +131,17 @@ if (Meteor.isClient) {
       var email = $('#login-email').val();
       var password = $('#login-password').val();
 
-      Meteor.loginWithPassword(email, password);
-      Router.go('connect');
-
-      /*Meteor.loginWithPassword(email, password, function(error){
-        if (err){
-          console.log('login attempt failed');
+      Meteor.loginWithPassword(email, password, function (error) {
+        if (error) {
+          console.log("login attempt failed");
           console.log(error);
-          //alert('Login attempt failed. Please try again.');
         }
 
-        else{
-          // The user is logged in
-          console.log('login attempt succeeded');
-          Router.go('connect');
+        else {
+          Router.go('connect')
         }
-      });*/
+
+      });
 
       $('#login-email').val('');
       $('#login-password').val('');
