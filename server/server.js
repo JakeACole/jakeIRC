@@ -53,10 +53,12 @@ if (Meteor.isServer) {
     },
 
     'ircLogout' : function() {
-      logMessage(currentNick, 'You have left the channel');
-      isConnected = false;
-      clearDB();
-      client.disconnect();
+      if (isConnected == true) {
+        logMessage(currentNick, 'You have left the channel');
+        isConnected = false;
+        clearDB();
+        client.disconnect();
+      }
     }
 
   });
@@ -99,6 +101,11 @@ if (Meteor.isServer) {
         console.log('error: ', message);
       }));
 
+      //Listener adds the message of the day
+      /*client.addListener('motd', Meteor.bindEnvironment(function (motd) {
+        logMessage('Message of the Day', motd);
+      }));*/
+
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
         logMessage('> ' + from, message);
@@ -110,6 +117,7 @@ if (Meteor.isServer) {
       }));
 
       client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
+        if(nick == null) nick = '';
         logMessage('> ' + nick, message);
       }));
 

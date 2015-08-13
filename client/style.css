@@ -27,12 +27,14 @@ h1, h2, h3, h4, p {
 	border-bottom-left-radius: 0px !important;
 }
 
-.chat-window, .user-list, .channel-list, .input-field,
-.connect-field, .help-field, .nav-bar, .category {
+.chat-window, .user-list, .channel-list, 
+.input-field, .connect-field, .login-field, 
+.help-field, .nav-bar, .category {
 	background: #F8F8F8;
 }
 
-.chat-window, .user-list, .channel-list, .category {
+.chat-window, .user-list, 
+.channel-list, .category {
 	border: 1px solid #000;
 	border-radius: 10px;
 }
@@ -79,17 +81,30 @@ h1, h2, h3, h4, p {
 	border-radius: 10px;
 }
 
+.login-field h2,
 .connect-field h2 {
 	margin-bottom: 20px;
 }
 
+.login-field button, 
 .connect-field button {
 	margin-bottom: 20px;
 }
 
-.connect-field {
+.connect-field, .login-field {
 	border: 1px solid #000;
 	border-radius: 10px;
+	margin-bottom: 10px;
+}
+
+.input-field button,
+.connect-field button,
+.login-field button {
+	margin-top: 10px;
+}
+
+.input-field h4 {
+	margin-top: 15px;
 }
 
 .help-field {
@@ -103,15 +118,6 @@ h1, h2, h3, h4, p {
 
 .help-field p {
 	margin-bottom: 10px;
-}
-
-.input-field button,
-.connect-field button {
-	margin-top: 10px;
-}
-
-.input-field h4 {
-	margin-top: 15px;
 }
 
 .nav-bar {

@@ -104,7 +104,55 @@ if (Meteor.isClient) {
       Router.go('irc');
     }
 
-  });  
+  }); 
+
+  Template.login.events({
+    'click #register-btn': function(event, template) {
+      //console.log("Added user" + ('#register-email').value;
+
+      var user = {
+        "email": $('#register-email').val(),
+        "password": $('#register-password').val()
+      }
+
+      Accounts.createUser(user);
+
+      console.log("user registered");
+
+      Meteor.loginWithPassword(user.email, user.password);
+      Router.go('connect');
+
+      $('#register-email').val('');
+      $('#register-password').val('');
+    },
+
+    'click #login-btn': function(event, template) {
+      //console.log("Added user" + ('#register-email').value;
+      var email = $('#login-email').val();
+      var password = $('#login-password').val();
+
+      Meteor.loginWithPassword(email, password);
+      Router.go('connect');
+
+      /*Meteor.loginWithPassword(email, password, function(error){
+        if (err){
+          console.log('login attempt failed');
+          console.log(error);
+          //alert('Login attempt failed. Please try again.');
+        }
+
+        else{
+          // The user is logged in
+          console.log('login attempt succeeded');
+          Router.go('connect');
+        }
+      });*/
+
+      $('#login-email').val('');
+      $('#login-password').val('');
+    }
+
+  }); 
 
   Template.irc.events({
     //These events allow the send message and enter key to send messages to the irc channel
@@ -150,9 +198,14 @@ if (Meteor.isClient) {
         Router.go('help');
     },
 
+    'click #login-btn' : function (event, template) {
+      Router.go('login');
+    },
+
     'click #logout-btn' : function (event, template) {
       Meteor.call('ircLogout');
-      Router.go('connect');
+      Meteor.logout();
+      Router.go('login');
     }
   });
 }
