@@ -7,7 +7,7 @@ if (Meteor.isClient) {
 
   //Allows client to access mongo collections
   Messages = new Mongo.Collection("messages");
-  Users = new Mongo.Collection("users");
+  Nicks = new Mongo.Collection("nicks");
   Channels = new Mongo.Collection("channels");
 
   //These helpers allow meteor objects to display on the GUI
@@ -37,19 +37,19 @@ if (Meteor.isClient) {
     },
 
     //Helper renders the current user list
-    users : function() {
-      var pulledUsers = [];
-      var cursor = Users.find().fetch();
+    nicks : function() {
+      var pulledNicks = [];
+      var cursor = Nicks.find().fetch();
       var i = 0;
 
       cursor.forEach(function(document) {
         for (index = 0; index < document.nicks.length; ++index) {
-          pulledUsers.push(document.nicks[index]);
+          pulledNicks.push(document.nicks[index]);
         }
         i++;
       });
 
-      return pulledUsers.slice();
+      return pulledNicks.slice();
     },
 
     channels : function() {
@@ -76,7 +76,7 @@ if (Meteor.isClient) {
     );
   }
   
-  //Formats the time displayed in the irc chat
+  //Formats the timestamp displayed in the irc chat
   function formatTime(milli) {
     var date =  new Date(milli);
     var minutes = date.getMinutes();
@@ -96,9 +96,9 @@ if (Meteor.isClient) {
   Template.connect.events({
     //These events allow the send message and enter key to send messages to the irc channel
     'click #connect-btn': function(event, template) {
-      Meteor.call('ircConnect', template.find('#user-name').value, 
+      Meteor.call('ircConnect', template.find('#nick-name').value, 
       template.find('#server-name').value, template.find('#channel-name').value);
-      $('#user-name').val('');
+      $('#nick-name').val('');
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');

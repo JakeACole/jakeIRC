@@ -5,7 +5,7 @@ if (Meteor.isServer) {
 
   //Mongo Collections that store the users, messages and channels
   Messages = new Mongo.Collection("messages");
-  Users = new Mongo.Collection("users");
+  Nicks = new Mongo.Collection("nicks");
   Channels = new Mongo.Collection("channels");
 
   //var irc = Meteor.require('irc');
@@ -13,13 +13,13 @@ if (Meteor.isServer) {
 
   var isConnected = false;
 
-  var currentUser = '', currentServer = '', currentChannel = '';
+  var currentNick = '', currentServer = '', currentChannel = '';
   var client = ircAdd();
 
   Meteor.methods({
     //Allows the client to connect to a specified channel
-    'ircConnect' : function(user, server, channel) {
-      currentUser = user;
+    'ircConnect' : function(nick, server, channel) {
+      currentNick = nick;
       currentServer = server;
       currentChannel = channel;
 
@@ -30,17 +30,20 @@ if (Meteor.isServer) {
     //Allows the client to send a message 
     'sendMessage': function(message) {
       if (isConnected == true) {
+
         if (message[0] == '/') {
           commandResponse(message);
-          console.log("Calling from here");
         }
+
         else {
           client.say(currentChannel, message);
-          console.log(currentUser + ' => ' + currentChannel + ': ' + message);
-          logMessage('< ' + currentUser, message);
+          console.log(currentNick + ' => ' + currentChannel + ': ' + message);
+          logMessage('< ' + currentNick, message);
         } 
+      }
+
       else {
-        logMessage('Server ', 'you are not connected yet, please wait to send another message.');
+        logMessage('Server', 'you are not connected yet, please wait to send another message.');
       }
     },
 
@@ -50,7 +53,7 @@ if (Meteor.isServer) {
     },
 
     'ircLogout' : function() {
-      logMessage(currentUser, 'You have left the channel');
+      logMessage(currentNick, 'You have left the channel');
       isConnected = false;
       clearDB();
       client.disconnect();
@@ -63,7 +66,7 @@ if (Meteor.isServer) {
 
     if(isConnected == true) {
 
-      var client = new irc.Client(currentServer, currentUser, {
+      var client = new irc.Client(currentServer, currentNick, {
           port: 6667,
           channels: [currentChannel],
           localAddress: null,
@@ -89,7 +92,7 @@ if (Meteor.isServer) {
       clearDB();
       updateChannel(currentChannel);
 
-      logMessage('Server ', 'Connecting to ' + currentChannel);
+      logMessage('Server', 'Connecting to ' + currentChannel);
       
       //catches errors that the client may throw
       client.addListener('error', Meteor.bindEnvironment (function(message) {
@@ -98,14 +101,21 @@ if (Meteor.isServer) {
 
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
-        //console.log(from + ' => ' + to + ': ' + message);
         logMessage('> ' + from, message);
+      }));
+
+      //Listerner adds pms to the collection
+      client.addListener('pm', Meteor.bindEnvironment(function (nick, to, text, message) {
+        logMessage('> ' + nick, message);
+      }));
+
+      client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
+        logMessage('> ' + nick, message);
       }));
 
       //Listener adds users to the collection
       client.addListener('names' + currentChannel, Meteor.bindEnvironment(function (nicks) {
-        //console.log(nicks);
-        updateUsers(nicks);
+        updateNicks(nicks);
       }));
 
       //Listener alerts user when a person joins the channel
@@ -127,10 +137,10 @@ if (Meteor.isServer) {
   //This clears the mongo DBs
   function clearDB () {
     Messages.remove({});
-    Users.remove({});
+    Nicks.remove({});
     Channels.remove({});
 
-    Users.insert({nicks:""});
+    Nicks.insert({nicks:""});
     Channels.insert({channel:""});
   }
 
@@ -143,7 +153,7 @@ if (Meteor.isServer) {
     });
   }
 
-  // 
+  //This function  
   function commandResponse(message) {
     // If a command has parameters, then chop the first word of
     // the message off to get the raw command,
@@ -157,30 +167,32 @@ if (Meteor.isServer) {
       var command = message.substr(1, message.length - 1).toLowerCase();
     }
 
-    console.log("test bruh");
-    var reply = 'dude';
+    var reply = '';
 
     // Set reponses for commands
     switch(command) {
       case 'command':
-        reply = "the current command list has: /help, /message, /command";
+        reply = "the current command list has: /command, /help, /message, /kick";
         break;
+
       case 'help':
         reply = "click the help button in the navbar for additional help";
         break;
+
       case 'kick':
-        reply = "kappa kappa kappa";
+        reply = "this feature will allow an admin to remove users from the channel";
         break;
+
       case 'message': 
-        reply = "write the message function kappa";
-        break;      
+        reply = "this feature will allow a user to send a private message to another user";
+        break; 
+             
       default:
         reply = "Unknown command, for the command list type /command";
         break;
     }
     
-    logMessage('Server ', reply);
-    //Meteor.call('sendMessage', response, 'RESP');
+    logMessage('Server', reply);
   }
 
   //Updates the channel list
@@ -188,31 +200,31 @@ if (Meteor.isServer) {
     var channelAra = [];
 
     channelAra.push(channel);
-    var userId = Channels.findOne();
+    var channelId = Channels.findOne();
 
     //Updates the Channels object
-    Channels.update(userId._id, {$set: 
+    Channels.update(channelId._id, {$set: 
       {channel: channelAra}
     });
 
   }
 
   //Updates the userlist 
-  function updateUsers(nicks) {
-    var userAra = [];
+  function updateNicks(nicks) {
+    var nickAra = [];
 
     for (var property in nicks) {
       if (nicks.hasOwnProperty(property)) {
-        userAra.push(property);
+        nickAra.push(property);
       }
     }
 
     //finds the only User object in the collection
-    var userId = Users.findOne();
+    var nickId = Nicks.findOne();
 
     //Updates the User object
-    Users.update(userId._id, {$set: 
-      {nicks: userAra}
+    Nicks.update(nickId._id, {$set: 
+      {nicks: nickAra}
     });
   }
 

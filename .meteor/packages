@@ -15,3 +15,5 @@ mrt:jquery-ui
 jameslefrere:irc
 meteorhacks:npm
 npm-container
+accounts-ui
+accounts-password
