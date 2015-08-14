@@ -71,6 +71,8 @@ if (Meteor.isServer) {
       var client = new irc.Client(currentServer, currentNick, {
           port: 6667,
           channels: [currentChannel],
+          floodProtection: true,
+          floodProtectionDelay: 1000,
           localAddress: null,
           debug: false,
           showErrors: false,
@@ -79,8 +81,6 @@ if (Meteor.isServer) {
           secure: false,
           selfSigned: false,
           certExpired: false,
-          floodProtection: false,
-          floodProtectionDelay: 1000,
           sasl: false,
           stripColors: false,
           channelPrefixes: "&#",
@@ -165,14 +165,14 @@ if (Meteor.isServer) {
   function commandResponse(message) {
 
     if((message.toLowerCase().indexOf(' ') > -1)) {
-      var command = message.substr(1, message.indexOf(' ')).toLowerCase();
-      console.log("First choice: " + command);
+      var command = message.substr(1, message.indexOf(' ') - 1).toLowerCase();
     }
 
     else {
       var command = message.substr(1, message.length - 1).toLowerCase();
-      console.log("Second choice: " + command);
     }
+
+    console.log(command + " end");
 
     var reply = '';
 

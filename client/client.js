@@ -71,7 +71,7 @@ if (Meteor.isClient) {
   //When a message is entered, scroll to the bottom
   function scrollBottom() {
     $(".chat-window").animate({
-      scrollTop:$(".chat-window")[0].scrollHeight},
+      scrollTop: $(".chat-window")[0].scrollHeight},
       $(".chat-window").height()
     );
   }
