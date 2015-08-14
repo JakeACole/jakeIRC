@@ -165,14 +165,14 @@ if (Meteor.isServer) {
   function commandResponse(message) {
 
     if((message.toLowerCase().indexOf(' ') > -1)) {
-      var command = message.substr(1, message.indexOf(' ')).toLowerCase();
-      console.log("First choice: " + command);
+      var command = message.substr(1, message.indexOf(' ') - 1).toLowerCase();
     }
 
     else {
       var command = message.substr(1, message.length - 1).toLowerCase();
-      console.log("Second choice: " + command);
     }
+
+    console.log(command + " end");
 
     var reply = '';
 
