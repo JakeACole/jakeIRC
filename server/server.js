@@ -117,7 +117,7 @@ if (Meteor.isServer) {
       }));
 
       client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
-        if(nick == null) nick = '';
+        if(nick == null) nick = 'Server';
         logMessage('> ' + nick, message);
       }));
 
@@ -161,18 +161,17 @@ if (Meteor.isServer) {
     });
   }
 
-  //This function  
+  //This function chops up the message and extracts the command
   function commandResponse(message) {
-    // If a command has parameters, then chop the first word of
-    // the message off to get the raw command,
-    // otherwise just take the raw command
 
     if((message.toLowerCase().indexOf(' ') > -1)) {
       var command = message.substr(1, message.indexOf(' ')).toLowerCase();
+      console.log("First choice: " + command);
     }
 
     else {
       var command = message.substr(1, message.length - 1).toLowerCase();
+      console.log("Second choice: " + command);
     }
 
     var reply = '';
