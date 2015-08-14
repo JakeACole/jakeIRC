@@ -71,6 +71,8 @@ if (Meteor.isServer) {
       var client = new irc.Client(currentServer, currentNick, {
           port: 6667,
           channels: [currentChannel],
+          floodProtection: true,
+          floodProtectionDelay: 1000,
           localAddress: null,
           debug: false,
           showErrors: false,
@@ -79,8 +81,6 @@ if (Meteor.isServer) {
           secure: false,
           selfSigned: false,
           certExpired: false,
-          floodProtection: false,
-          floodProtectionDelay: 1000,
           sasl: false,
           stripColors: false,
           channelPrefixes: "&#",
