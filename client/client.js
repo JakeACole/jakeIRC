@@ -7,7 +7,7 @@ if (Meteor.isClient) {
 
   //Allows client to access mongo collections
   Messages = new Mongo.Collection("messages");
-  Users = new Mongo.Collection("users");
+  Nicks = new Mongo.Collection("nicks");
   Channels = new Mongo.Collection("channels");
 
   //These helpers allow meteor objects to display on the GUI
@@ -37,19 +37,19 @@ if (Meteor.isClient) {
     },
 
     //Helper renders the current user list
-    users : function() {
-      var pulledUsers = [];
-      var cursor = Users.find().fetch();
+    nicks : function() {
+      var pulledNicks = [];
+      var cursor = Nicks.find().fetch();
       var i = 0;
 
       cursor.forEach(function(document) {
         for (index = 0; index < document.nicks.length; ++index) {
-          pulledUsers.push(document.nicks[index]);
+          pulledNicks.push(document.nicks[index]);
         }
         i++;
       });
 
-      return pulledUsers.slice();
+      return pulledNicks.slice();
     },
 
     channels : function() {
@@ -76,7 +76,7 @@ if (Meteor.isClient) {
     );
   }
   
-  //Formats the time displayed in the irc chat
+  //Formats the timestamp displayed in the irc chat
   function formatTime(milli) {
     var date =  new Date(milli);
     var minutes = date.getMinutes();
@@ -96,15 +96,56 @@ if (Meteor.isClient) {
   Template.connect.events({
     //These events allow the send message and enter key to send messages to the irc channel
     'click #connect-btn': function(event, template) {
-      Meteor.call('ircConnect', template.find('#user-name').value, 
+      Meteor.call('ircConnect', template.find('#nick-name').value, 
       template.find('#server-name').value, template.find('#channel-name').value);
-      $('#user-name').val('');
+      $('#nick-name').val('');
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');
     }
 
-  });  
+  }); 
+
+  Template.login.events({
+    //Registers a new user into the meteor user db
+    'click #register-btn': function(event, template) {
+      var user = {
+        "email": $('#register-email').val(),
+        "password": $('#register-password').val()
+      }
+
+      Accounts.createUser(user);
+      console.log(user.email + " has registered");
+      Meteor.loginWithPassword(user.email, user.password);
+      Router.go('connect');
+
+      $('#register-email').val('');
+      $('#register-password').val('');
+    },
+
+    //Logs a registered user into jakeIRC
+    'click #login-btn': function(event, template) {
+      var email = $('#login-email').val();
+      var password = $('#login-password').val();
+
+      Meteor.loginWithPassword(email, password, function (error) {
+        //Catches login errors if they occur
+        if (error) {
+          console.log("login attempt failed");
+          console.log(error);
+        }
+
+        else {
+          Router.go('connect')
+        }
+
+      });
+
+      $('#login-email').val('');
+      $('#login-password').val('');
+    }
+
+  }); 
 
   Template.irc.events({
     //These events allow the send message and enter key to send messages to the irc channel
@@ -122,11 +163,13 @@ if (Meteor.isClient) {
 
     //Allows the user to clear the messages on the screen
     'click #clear-btn' : function (event, template) {
+      event.preventDefault();
       Meteor.call('clearMessages');
     },
 
     //Allows the user to close the current channel
     'click .close-channel' : function (event, template) {
+      event.preventDefault();
       Meteor.call('ircLogout');
       Router.go('connect');
     }
@@ -150,9 +193,16 @@ if (Meteor.isClient) {
         Router.go('help');
     },
 
+    'click #login-btn' : function (event, template) {
+      event.preventDefault();
+      Router.go('login');
+    },
+
     'click #logout-btn' : function (event, template) {
+      event.preventDefault();
       Meteor.call('ircLogout');
-      Router.go('connect');
+      Meteor.logout();
+      Router.go('login');
     }
   });
 }
