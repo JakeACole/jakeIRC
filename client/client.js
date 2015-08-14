@@ -107,18 +107,15 @@ if (Meteor.isClient) {
   }); 
 
   Template.login.events({
+    //Registers a new user into the meteor user db
     'click #register-btn': function(event, template) {
-      //console.log("Added user" + ('#register-email').value;
-
       var user = {
         "email": $('#register-email').val(),
         "password": $('#register-password').val()
       }
 
       Accounts.createUser(user);
-
-      console.log("user registered");
-
+      console.log(user.email + " has registered");
       Meteor.loginWithPassword(user.email, user.password);
       Router.go('connect');
 
@@ -126,12 +123,13 @@ if (Meteor.isClient) {
       $('#register-password').val('');
     },
 
+    //Logs a registered user into jakeIRC
     'click #login-btn': function(event, template) {
-      //console.log("Added user" + ('#register-email').value;
       var email = $('#login-email').val();
       var password = $('#login-password').val();
 
       Meteor.loginWithPassword(email, password, function (error) {
+        //Catches login errors if they occur
         if (error) {
           console.log("login attempt failed");
           console.log(error);
@@ -165,11 +163,13 @@ if (Meteor.isClient) {
 
     //Allows the user to clear the messages on the screen
     'click #clear-btn' : function (event, template) {
+      event.preventDefault();
       Meteor.call('clearMessages');
     },
 
     //Allows the user to close the current channel
     'click .close-channel' : function (event, template) {
+      event.preventDefault();
       Meteor.call('ircLogout');
       Router.go('connect');
     }
@@ -194,10 +194,12 @@ if (Meteor.isClient) {
     },
 
     'click #login-btn' : function (event, template) {
+      event.preventDefault();
       Router.go('login');
     },
 
     'click #logout-btn' : function (event, template) {
+      event.preventDefault();
       Meteor.call('ircLogout');
       Meteor.logout();
       Router.go('login');

@@ -176,7 +176,7 @@ if (Meteor.isServer) {
 
     var reply = '';
 
-    // Set reponses for commands
+    //Sets the reply message for each command
     switch(command) {
       case 'command':
         reply = "the current command list has: /command, /help, /message, /kick";
