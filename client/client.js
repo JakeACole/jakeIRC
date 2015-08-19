@@ -7,11 +7,6 @@ if (Meteor.isClient) {
 
   var loggedIn = false;
 
-  //Allows client to access mongo collections
-  Messages = new Mongo.Collection("messages");
-  Nicks = new Mongo.Collection("nicks");
-  Channels = new Mongo.Collection("channels");
-
   //These helpers allow meteor objects to display on the GUI
   Template.irc.helpers({
 
@@ -100,6 +95,7 @@ if (Meteor.isClient) {
     'click #connect-btn': function(event, template) {
       Meteor.call('ircConnect', template.find('#nick-name').value, 
       template.find('#server-name').value, template.find('#channel-name').value);
+
       $('#nick-name').val('');
       $('#server-name').val('');
       $('#channel-name').val('');
@@ -107,20 +103,26 @@ if (Meteor.isClient) {
     },
 
     'click #fav-add-btn': function(event, template) { 
-      Meteor.user().channels.insert ({
-        "nick" : ('#fav-name').value;
-        "server" : ('#fav-server').value;
-        "channel" : ('#fav-channel').value;
+      console.log("other stuff: " + Meteor.user()._id);
+      console.log("value: " + $('#fav-nick').val());
+
+      Meteor.user().favlist.insert({
+        "nick" : $('#fav-nick').val(),
+        "server" : $('#fav-server').val(),
+        "channel" : $('#fav-channel').val()
       })
-    },
 
-    'click #fav-connect': function(event, template) {
-      Meteor.call('ircConnect', Meteor.user().channels.nick, 
-      Meteor.user().channels.server, Meteor.user().channels.channel;
-
-      Router.go('irc');
-      }
+      $('#fav-nick').val('');
+      $('#fav-server').val('');
+      $('#fav-channel').val('');
     }
+
+    /*,'click .fav-connect': function(event, template) {
+      Meteor.call('ircConnect', Meteor.user().channels.nick, 
+      Meteor.user().channels.server, Meteor.user().channels.channel);
+
+      Router.go('irc');    
+    }*/
 
   }); 
 
@@ -130,7 +132,11 @@ if (Meteor.isClient) {
       var user = {
         "email" : $('#register-email').val(),
         "password" : $('#register-password').val(),
-        "channels" : ({})
+        "favlist" : ({
+          "nick" : "jakeIRC",
+          "server" : "irc.rizon.net",
+          "channel" : "#a100chat"
+        })
       }
 
       Accounts.createUser(user);
@@ -190,7 +196,6 @@ if (Meteor.isClient) {
 
     //Allows the user to close the current channel
     'click .close-channel' : function (event, template) {
-      event.preventDefault();
       Meteor.call('ircLogout');
       Router.go('connect');
     }
