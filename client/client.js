@@ -5,6 +5,8 @@ if (Meteor.isClient) {
   //Used for the scrollBottom() function
   var msgCounter = 0;
 
+  var loggedIn = false;
+
   //Allows client to access mongo collections
   Messages = new Mongo.Collection("messages");
   Nicks = new Mongo.Collection("nicks");
@@ -102,6 +104,22 @@ if (Meteor.isClient) {
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');
+    },
+
+    'click #fav-add-btn': function(event, template) { 
+      Meteor.user().channels.insert ({
+        "nick" : ('#fav-name').value;
+        "server" : ('#fav-server').value;
+        "channel" : ('#fav-channel').value;
+      })
+    },
+
+    'click #fav-connect': function(event, template) {
+      Meteor.call('ircConnect', Meteor.user().channels.nick, 
+      Meteor.user().channels.server, Meteor.user().channels.channel;
+
+      Router.go('irc');
+      }
     }
 
   }); 
@@ -110,13 +128,15 @@ if (Meteor.isClient) {
     //Registers a new user into the meteor user db
     'click #register-btn': function(event, template) {
       var user = {
-        "email": $('#register-email').val(),
-        "password": $('#register-password').val()
+        "email" : $('#register-email').val(),
+        "password" : $('#register-password').val(),
+        "channels" : ({})
       }
 
       Accounts.createUser(user);
       console.log(user.email + " has registered");
       Meteor.loginWithPassword(user.email, user.password);
+      loggedIn = true;
       Router.go('connect');
 
       $('#register-email').val('');
@@ -136,6 +156,7 @@ if (Meteor.isClient) {
         }
 
         else {
+          loggedIn = true;
           Router.go('connect')
         }
 
@@ -202,6 +223,7 @@ if (Meteor.isClient) {
       event.preventDefault();
       Meteor.call('ircLogout');
       Meteor.logout();
+      loggedIn = false;
       Router.go('login');
     }
   });
