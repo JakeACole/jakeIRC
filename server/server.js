@@ -7,8 +7,6 @@ if (Meteor.isServer) {
   var isConnected = false;
   var currentNick = '', currentServer = '', currentChannel = '';
 
-  //current ID
-
   Meteor.methods({
     //Allows the client to connect to a specified channel
     'ircConnect' : function(nick, server, channel) {

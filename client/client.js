@@ -83,21 +83,12 @@ if (Meteor.isClient) {
 
   });
 
-  Template.header.helpers ({
-    currentnick : function() {
-      currentNick = [];
-      var currentUser = Meteor.users.findOne(Meteor.user()._id);
-      currentNick.push(currentUser.profile.favnick);
-
-      return currentNick.slice();
-    }
-  });
-
   Template.connect.rendered = function() {
 
     //Allows for the dynamic list of favorite connect buttons to connect to the irc server
     $('.fav-connect').click(function() {
       var id = $(this).attr('id');
+      console.log("current id to connect to: " + id);
 
       var curFavlist = [];
       curFavlist = Meteor.user().profile.favlist;
@@ -112,6 +103,8 @@ if (Meteor.isClient) {
     $('.fav-delete').click(function() {
       var id = $(this).attr('id');
 
+      console.log("current id removed: " + id);
+
       var curFavlist = [];
       curFavlist = Meteor.user().profile.favlist;
 
@@ -119,9 +112,16 @@ if (Meteor.isClient) {
         curFavlist.splice(id, 1);
       }
 
+      //Updates the stored index values
+      for (var i = 0; i < curFavlist.length; i++) {
+        curFavlist[i].index = i;
+      }
+
       Meteor.users.update({_id:Meteor.user()._id},
        {$set: { "profile.favlist": curFavlist}
-      })
+      });
+
+      Router.go('connect');
     });    
 
   }
@@ -178,19 +178,23 @@ if (Meteor.isClient) {
 
       Meteor.users.update({_id:Meteor.user()._id},
        {$set: { "profile.favlist": curFavlist}
-      })
+      });
 
       $('#fav-server').val('');
       $('#fav-channel').val('');
+
+      Router.go('connect');
     },
 
     'click #edit-nick-btn': function(event, template) { 
 
       Meteor.users.update({_id:Meteor.user()._id},
        {$set: { "profile.favnick": $('#user-nick').val()}
-      })
+      });
 
       $('#user-nick').val('');
+
+      Router.go('connect');
     }
 
   }); 
@@ -221,10 +225,11 @@ if (Meteor.isClient) {
       console.log(user.email + " has registered");
       Meteor.loginWithPassword(user.email, user.password);
       loggedIn = true;
-      Router.go('connect');
 
       $('#register-email').val('');
       $('#register-password').val('');
+
+      Router.go('connect');
     },
 
     //Logs a registered user into jakeIRC
