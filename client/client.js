@@ -4,15 +4,10 @@ if (Meteor.isClient) {
 
   //Used for the scrollBottom() function
   var msgCounter = 0;
-
-  //Allows client to access mongo collections
-  Messages = new Mongo.Collection("messages");
-  Nicks = new Mongo.Collection("nicks");
-  Channels = new Mongo.Collection("channels");
+  var loggedIn = false;
 
   //These helpers allow meteor objects to display on the GUI
-  Template.irc.helpers({
-
+  Template.irc.helpers ({
     //Helper renders the messages in the chat window
     messages: function() {
       var pulledMessages = [];       
@@ -66,7 +61,69 @@ if (Meteor.isClient) {
 
       return pulledChannels.slice();
     }
+
   });
+
+  Template.connect.helpers ({
+   
+    favoritelist : function() {
+      var favAra = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      favAra = currentUser.profile.favlist;
+
+      return favAra.slice();
+    },
+
+    currentnick : function() {
+      currentNick = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      currentNick.push(currentUser.profile.favnick);
+
+      return currentNick.slice();
+    }
+
+  });
+
+  Template.connect.rendered = function() {
+    //Allows for the dynamic list of favorite connect buttons to connect to the irc server
+    $('.fav-connect').click(function() {
+      var id = $(this).attr('id');
+      console.log("current id to connect to: " + id);
+
+      var curFavlist = [];
+      curFavlist = Meteor.user().profile.favlist;
+
+      Meteor.call('ircConnect', Meteor.user().profile.favnick, 
+      curFavlist[id].server, curFavlist[id].channel);
+
+      Router.go('irc'); 
+    });
+
+    //Allows the user to remove favorite channels
+    $('.fav-delete').click(function() {
+      var id = $(this).attr('id');
+      console.log("current id removed: " + id);
+
+      var curFavlist = [];
+      curFavlist = Meteor.user().profile.favlist;
+
+      if (id > -1) {
+        curFavlist.splice(id, 1);
+      }
+
+      //Updates the stored index values
+      for (var i = 0; i < curFavlist.length; i++) {
+        curFavlist[i].index = i;
+      }
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favlist": curFavlist}
+      });
+
+      Router.go('connect');
+    });   
+
+  }
 
   //When a message is entered, scroll to the bottom
   function scrollBottom() {
@@ -79,29 +136,69 @@ if (Meteor.isClient) {
   //Formats the timestamp displayed in the irc chat
   function formatTime(milli) {
     var date =  new Date(milli);
+    var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
 
-    if(minutes < 10){
+    if (hours < 10) {
+      hours = '0' + hours;
+    }
+
+    if(minutes < 10) {
         minutes = '0' + minutes;
     }
 
-    if(seconds < 10){
+    if(seconds < 10) {
         seconds = '0' + seconds;
     }
 
-    return '[' + date.getHours() + ':' + minutes + ':' + seconds + '] ';
+    return '[' + hours + ':' + minutes + ':' + seconds + '] ';
   }
 
   Template.connect.events({
-    //These events allow the send message and enter key to send messages to the irc channel
+    //These events allow for the user to connect to channels, change their nickname,
+    //add favorite channels, and connect to favorite channels
     'click #connect-btn': function(event, template) {
-      Meteor.call('ircConnect', template.find('#nick-name').value, 
+      Meteor.call('ircConnect', Meteor.user().profile.favnick, 
       template.find('#server-name').value, template.find('#channel-name').value);
-      $('#nick-name').val('');
+
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');
+    },
+
+    'click #fav-add-btn': function(event, template) { 
+      var curFavlist = [];
+
+      curFavlist = Meteor.user().profile.favlist;
+
+      var newEntry = {
+        "server" : $('#fav-server').val(),
+        "channel" : $('#fav-channel').val(),
+        "index" : curFavlist.length
+      }
+
+      curFavlist.push(newEntry);
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favlist": curFavlist}
+      });
+
+      $('#fav-server').val('');
+      $('#fav-channel').val('');
+
+      Router.go('connect');
+    },
+
+    'click #edit-nick-btn': function(event, template) { 
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favnick": $('#user-nick').val()}
+      });
+
+      $('#user-nick').val('');
+
+      Router.go('connect');
     }
 
   }); 
@@ -109,18 +206,34 @@ if (Meteor.isClient) {
   Template.login.events({
     //Registers a new user into the meteor user db
     'click #register-btn': function(event, template) {
+      var initFavlist = [];
+
+      var newEntry = {
+        "server" : "irc.rizon.net",
+        "channel" : "#a100chat",
+        "index" : 0
+      }
+
+      initFavlist.push(newEntry);      
+
       var user = {
-        "email": $('#register-email').val(),
-        "password": $('#register-password').val()
+        "email" : $('#register-email').val(),
+        "password" : $('#register-password').val(),
+        "profile" : {
+          "favlist" : initFavlist,
+          "favnick" : "jakeIRC"
+        }
       }
 
       Accounts.createUser(user);
       console.log(user.email + " has registered");
       Meteor.loginWithPassword(user.email, user.password);
-      Router.go('connect');
+      loggedIn = true;
 
       $('#register-email').val('');
       $('#register-password').val('');
+
+      Router.go('connect');
     },
 
     //Logs a registered user into jakeIRC
@@ -136,6 +249,7 @@ if (Meteor.isClient) {
         }
 
         else {
+          loggedIn = true;
           Router.go('connect')
         }
 
@@ -169,7 +283,6 @@ if (Meteor.isClient) {
 
     //Allows the user to close the current channel
     'click .close-channel' : function (event, template) {
-      event.preventDefault();
       Meteor.call('ircLogout');
       Router.go('connect');
     }
@@ -202,6 +315,7 @@ if (Meteor.isClient) {
       event.preventDefault();
       Meteor.call('ircLogout');
       Meteor.logout();
+      loggedIn = false;
       Router.go('login');
     }
   });

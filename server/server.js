@@ -2,19 +2,10 @@
 //meteor deploy jakeirc.meteor.com
 
 if (Meteor.isServer) {
-
-  //Mongo Collections that store the users, messages and channels
-  Messages = new Mongo.Collection("messages");
-  Nicks = new Mongo.Collection("nicks");
-  Channels = new Mongo.Collection("channels");
-
   //var irc = Meteor.require('irc');
   var irc = Meteor.npmRequire("irc");
-
   var isConnected = false;
-
   var currentNick = '', currentServer = '', currentChannel = '';
-  var client = ircAdd();
 
   Meteor.methods({
     //Allows the client to connect to a specified channel
@@ -67,25 +58,24 @@ if (Meteor.isServer) {
   function ircAdd() {
 
     if(isConnected == true) {
-
       var client = new irc.Client(currentServer, currentNick, {
-          port: 6667,
-          channels: [currentChannel],
-          floodProtection: true,
-          floodProtectionDelay: 1000,
-          localAddress: null,
-          debug: false,
-          showErrors: false,
-          autoRejoin: false,
-          autoConnect: false,
-          secure: false,
-          selfSigned: false,
-          certExpired: false,
-          sasl: false,
-          stripColors: false,
-          channelPrefixes: "&#",
-          messageSplit: 512,
-          encoding: ''
+        port: 6667,
+        channels: [currentChannel],
+        floodProtection: true,
+        floodProtectionDelay: 1000,
+        localAddress: null,
+        debug: false,
+        showErrors: false,
+        autoRejoin: false,
+        autoConnect: false,
+        secure: false,
+        selfSigned: false,
+        certExpired: false,
+        sasl: false,
+        stripColors: false,
+        channelPrefixes: "&#",
+        messageSplit: 512,
+        encoding: ''
       });
 
       //This allows the irc client to connect
@@ -108,7 +98,7 @@ if (Meteor.isServer) {
 
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
-        logMessage('> ' + from, message);
+          logMessage('> ' + from, message);
       }));
 
       //Listerner adds pms to the collection
@@ -116,10 +106,10 @@ if (Meteor.isServer) {
         logMessage('> ' + nick, message);
       }));
 
-      client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
+      /*client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
         if(nick == null) nick = 'Server';
         logMessage('> ' + nick, message);
-      }));
+      }));*/
 
       //Listener adds users to the collection
       client.addListener('names' + currentChannel, Meteor.bindEnvironment(function (nicks) {
