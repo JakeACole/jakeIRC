@@ -121,7 +121,7 @@ if (Meteor.isClient) {
       });
 
       Router.go('connect');
-    });    
+    });   
 
   }
 
@@ -136,23 +136,28 @@ if (Meteor.isClient) {
   //Formats the timestamp displayed in the irc chat
   function formatTime(milli) {
     var date =  new Date(milli);
+    var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
 
-    if(minutes < 10){
+    if (hours < 10) {
+      hours = '0' + hours;
+    }
+
+    if(minutes < 10) {
         minutes = '0' + minutes;
     }
 
-    if(seconds < 10){
+    if(seconds < 10) {
         seconds = '0' + seconds;
     }
 
-    return '[' + date.getHours() + ':' + minutes + ':' + seconds + '] ';
+    return '[' + hours + ':' + minutes + ':' + seconds + '] ';
   }
 
   Template.connect.events({
-    //These events allow the send message and enter key to send messages to the irc channel
-
+    //These events allow for the user to connect to channels, change their nickname,
+    //add favorite channels, and connect to favorite channels
     'click #connect-btn': function(event, template) {
       Meteor.call('ircConnect', Meteor.user().profile.favnick, 
       template.find('#server-name').value, template.find('#channel-name').value);

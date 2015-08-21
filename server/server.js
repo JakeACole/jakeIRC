@@ -98,7 +98,7 @@ if (Meteor.isServer) {
 
       //Listener adds messages to the collection
       client.addListener('message', Meteor.bindEnvironment(function (from, to, message) {
-        logMessage('> ' + from, message);
+          logMessage('> ' + from, message);
       }));
 
       //Listerner adds pms to the collection
