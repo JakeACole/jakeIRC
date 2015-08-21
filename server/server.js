@@ -4,11 +4,10 @@
 if (Meteor.isServer) {
   //var irc = Meteor.require('irc');
   var irc = Meteor.npmRequire("irc");
-
   var isConnected = false;
-
   var currentNick = '', currentServer = '', currentChannel = '';
-  var client = ircAdd();
+
+  //current ID
 
   Meteor.methods({
     //Allows the client to connect to a specified channel
@@ -63,23 +62,23 @@ if (Meteor.isServer) {
     if(isConnected == true) {
 
       var client = new irc.Client(currentServer, currentNick, {
-          port: 6667,
-          channels: [currentChannel],
-          floodProtection: true,
-          floodProtectionDelay: 1000,
-          localAddress: null,
-          debug: false,
-          showErrors: false,
-          autoRejoin: false,
-          autoConnect: false,
-          secure: false,
-          selfSigned: false,
-          certExpired: false,
-          sasl: false,
-          stripColors: false,
-          channelPrefixes: "&#",
-          messageSplit: 512,
-          encoding: ''
+        port: 6667,
+        channels: [currentChannel],
+        floodProtection: true,
+        floodProtectionDelay: 1000,
+        localAddress: null,
+        debug: false,
+        showErrors: false,
+        autoRejoin: false,
+        autoConnect: false,
+        secure: false,
+        selfSigned: false,
+        certExpired: false,
+        sasl: false,
+        stripColors: false,
+        channelPrefixes: "&#",
+        messageSplit: 512,
+        encoding: ''
       });
 
       //This allows the irc client to connect

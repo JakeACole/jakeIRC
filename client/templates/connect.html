@@ -22,29 +22,30 @@
 				</div>
 			</div>
 
-			<!-- {{#each xyz}}
+			{{#each favoritelist}}
+				<div class = "col-xs-12">
+					<div class="col-xs-2">
+						<button type="button" id="{{this.index}}" class="btn btn-default fav-connect">
+							connect {{this.index}}
+						</button>
+					</div>
+					<div class="col-xs-2">
+						<h4> {{this.nick}}</h4>
+					</div>
+					<div class="col-xs-3"> 
+						<h4> {{this.server}} </h4>
+					</div>
+					<div class="col-xs-3"> 
+						<h4> {{this.channel}} </h4>
+					</div>
+					<div class = "col-xs-2">
+						<button type="button" class="btn btn-default fav-delete">
+							delete
+						</button>
+					</div>
+				</div>
+			{{/each}}
 
-				{{this}}
-
-			{{/each}} -->
-
-			<div class = "col-xs-12">
-				<div class="col-xs-2">
-					<button type="button" class="btn btn-default fav-connect">connect</button>
-				</div>
-				<div class="col-xs-2">
-					<h4> Jake </h4>
-				</div>
-				<div class="col-xs-3"> 
-					<h4> irc.rizon.net </h4>
-				</div>
-				<div class="col-xs-3"> 
-					<h4> #a100chat </h4>
-				</div>
-				<div class = "col-xs-2">
-					<button type="button" class="btn btn-default fav-delete">delete</button>
-				</div>
-			</div>
 		</div>
 
 		<div class = "col-xs-12 connect-field">

@@ -4,12 +4,10 @@ if (Meteor.isClient) {
 
   //Used for the scrollBottom() function
   var msgCounter = 0;
-
   var loggedIn = false;
 
   //These helpers allow meteor objects to display on the GUI
-  Template.irc.helpers({
-
+  Template.irc.helpers ({
     //Helper renders the messages in the chat window
     messages: function() {
       var pulledMessages = [];       
@@ -63,7 +61,36 @@ if (Meteor.isClient) {
 
       return pulledChannels.slice();
     }
+
   });
+
+  Template.connect.helpers ({
+    favoritelist : function() {
+      var favAra = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      favAra = currentUser.profile.favlist;
+
+      return favAra.slice();
+    }
+  });
+
+  Template.connect.rendered = function() {
+
+    //Allows for the dynamic list of favorite connect buttons to connect to the irc server
+    $('.fav-connect').click(function() {
+      var id = $(this).attr('id');
+      console.log("the id is: " + id);
+
+      var curFavlist = [];
+      curFavlist = Meteor.user().profile.favlist;
+
+      Meteor.call('ircConnect', curFavlist[id].nick, 
+      curFavlist[id].server, curFavlist[id].channel);
+
+      Router.go('irc'); 
+    });
+
+  }
 
   //When a message is entered, scroll to the bottom
   function scrollBottom() {
@@ -103,13 +130,21 @@ if (Meteor.isClient) {
     },
 
     'click #fav-add-btn': function(event, template) { 
-      console.log("other stuff: " + Meteor.user()._id);
-      console.log("value: " + $('#fav-nick').val());
+      var curFavlist = [];
 
-      Meteor.user().favlist.insert({
+      curFavlist = Meteor.user().profile.favlist;
+
+      var newEntry = {
         "nick" : $('#fav-nick').val(),
         "server" : $('#fav-server').val(),
-        "channel" : $('#fav-channel').val()
+        "channel" : $('#fav-channel').val(),
+        "index" : curFavlist.length
+      }
+
+      curFavlist.push(newEntry);
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favlist": curFavlist}
       })
 
       $('#fav-nick').val('');
@@ -117,26 +152,28 @@ if (Meteor.isClient) {
       $('#fav-channel').val('');
     }
 
-    /*,'click .fav-connect': function(event, template) {
-      Meteor.call('ircConnect', Meteor.user().channels.nick, 
-      Meteor.user().channels.server, Meteor.user().channels.channel);
-
-      Router.go('irc');    
-    }*/
-
   }); 
 
   Template.login.events({
     //Registers a new user into the meteor user db
     'click #register-btn': function(event, template) {
+      var initFavlist = [];
+
+      var newEntry = {
+        "nick" : "jakeIRC",
+        "server" : "irc.rizon.net",
+        "channel" : "#a100chat",
+        "index" : 0
+      }
+
+      initFavlist.push(newEntry);      
+
       var user = {
         "email" : $('#register-email').val(),
         "password" : $('#register-password').val(),
-        "favlist" : ({
-          "nick" : "jakeIRC",
-          "server" : "irc.rizon.net",
-          "channel" : "#a100chat"
-        })
+        "profile" : {
+          "favlist" : initFavlist
+        }
       }
 
       Accounts.createUser(user);
