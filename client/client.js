@@ -71,6 +71,25 @@ if (Meteor.isClient) {
       favAra = currentUser.profile.favlist;
 
       return favAra.slice();
+    },
+
+    currentnick : function() {
+      currentNick = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      currentNick.push(currentUser.profile.favnick);
+
+      return currentNick.slice();
+    }
+
+  });
+
+  Template.header.helpers ({
+    currentnick : function() {
+      currentNick = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      currentNick.push(currentUser.profile.favnick);
+
+      return currentNick.slice();
     }
   });
 
@@ -79,16 +98,31 @@ if (Meteor.isClient) {
     //Allows for the dynamic list of favorite connect buttons to connect to the irc server
     $('.fav-connect').click(function() {
       var id = $(this).attr('id');
-      console.log("the id is: " + id);
 
       var curFavlist = [];
       curFavlist = Meteor.user().profile.favlist;
 
-      Meteor.call('ircConnect', curFavlist[id].nick, 
+      Meteor.call('ircConnect', Meteor.user().profile.favnick, 
       curFavlist[id].server, curFavlist[id].channel);
 
       Router.go('irc'); 
     });
+
+    //Allows the user to remove favorite channels
+    $('.fav-delete').click(function() {
+      var id = $(this).attr('id');
+
+      var curFavlist = [];
+      curFavlist = Meteor.user().profile.favlist;
+
+      if (id > -1) {
+        curFavlist.splice(id, 1);
+      }
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favlist": curFavlist}
+      })
+    });    
 
   }
 
@@ -119,15 +153,15 @@ if (Meteor.isClient) {
 
   Template.connect.events({
     //These events allow the send message and enter key to send messages to the irc channel
-    'click #connect-btn': function(event, template) {
-      Meteor.call('ircConnect', template.find('#nick-name').value, 
+
+    /*'click #connect-btn': function(event, template) {
+      Meteor.call('ircConnect', Meteor.user().profile.favnick, 
       template.find('#server-name').value, template.find('#channel-name').value);
 
-      $('#nick-name').val('');
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');
-    },
+    },*/
 
     'click #fav-add-btn': function(event, template) { 
       var curFavlist = [];
@@ -135,7 +169,6 @@ if (Meteor.isClient) {
       curFavlist = Meteor.user().profile.favlist;
 
       var newEntry = {
-        "nick" : $('#fav-nick').val(),
         "server" : $('#fav-server').val(),
         "channel" : $('#fav-channel').val(),
         "index" : curFavlist.length
@@ -147,9 +180,17 @@ if (Meteor.isClient) {
        {$set: { "profile.favlist": curFavlist}
       })
 
-      $('#fav-nick').val('');
       $('#fav-server').val('');
       $('#fav-channel').val('');
+    },
+
+    'click #edit-nick-btn': function(event, template) { 
+
+      Meteor.users.update({_id:Meteor.user()._id},
+       {$set: { "profile.favnick": $('#user-nick').val()}
+      })
+
+      $('#user-nick').val('');
     }
 
   }); 
@@ -160,7 +201,6 @@ if (Meteor.isClient) {
       var initFavlist = [];
 
       var newEntry = {
-        "nick" : "jakeIRC",
         "server" : "irc.rizon.net",
         "channel" : "#a100chat",
         "index" : 0
@@ -172,7 +212,8 @@ if (Meteor.isClient) {
         "email" : $('#register-email').val(),
         "password" : $('#register-password').val(),
         "profile" : {
-          "favlist" : initFavlist
+          "favlist" : initFavlist,
+          "favnick" : "jakeIRC"
         }
       }
 

@@ -60,7 +60,6 @@ if (Meteor.isServer) {
   function ircAdd() {
 
     if(isConnected == true) {
-
       var client = new irc.Client(currentServer, currentNick, {
         port: 6667,
         channels: [currentChannel],
@@ -109,10 +108,10 @@ if (Meteor.isServer) {
         logMessage('> ' + nick, message);
       }));
 
-      client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
+      /*client.addListener('notice', Meteor.bindEnvironment(function (nick, text, message) {
         if(nick == null) nick = 'Server';
         logMessage('> ' + nick, message);
-      }));
+      }));*/
 
       //Listener adds users to the collection
       client.addListener('names' + currentChannel, Meteor.bindEnvironment(function (nicks) {

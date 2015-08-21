@@ -3,43 +3,57 @@
 	<div class = "row">
 
 		<div class = "col-xs-12 connect-field">
+		
+		<h2> Current Nickname: {{#each currentnick}}{{this}}{{/each}}</h2>
+
+			<div class = "col-xs-12">
+				<div class="col-xs-3">
+					<h4> Update nick: </h4>
+				</div>
+
+				<div class="col-xs-6"> 
+					<input id="user-nick" class="form-control" placeholder="enter nickname..."> 
+				</div>
+
+				<div class = "col-xs-2">
+					<button type="button" class="btn btn-default" id="edit-nick-btn">update nick</button>
+				</div>
+			</div>
+
+		</div>
+
+		<div class = "col-xs-12 connect-field">
 		<h2> Favorite Channels </h2>
 			<div class = "col-xs-12">
-				<div class="col-xs-2">
-					<h4> Connect </h4>
+				<div class="col-xs-3">
+					<h4></h4>
 				</div>
-				<div class="col-xs-2">
-					<h4> Nickname </h4>
-				</div>
-				<div class="col-xs-3"> 
+				<div class="col-xs-4"> 
 					<h4> Server </h4>
 				</div>
 				<div class="col-xs-3"> 
 					<h4> Channel </h4>
 				</div>
 				<div class ="col-xs-2">
-					<h4> Delete </h4>
+					<h4></h4>
 				</div>
 			</div>
 
 			{{#each favoritelist}}
 				<div class = "col-xs-12">
-					<div class="col-xs-2">
+					<div class="col-xs-3">
 						<button type="button" id="{{this.index}}" class="btn btn-default fav-connect">
-							connect {{this.index}}
+							connect
 						</button>
 					</div>
-					<div class="col-xs-2">
-						<h4> {{this.nick}}</h4>
-					</div>
-					<div class="col-xs-3"> 
+					<div class="col-xs-4"> 
 						<h4> {{this.server}} </h4>
 					</div>
 					<div class="col-xs-3"> 
 						<h4> {{this.channel}} </h4>
 					</div>
 					<div class = "col-xs-2">
-						<button type="button" class="btn btn-default fav-delete">
+						<button type="button" id="{{this.index}}" class="btn btn-default fav-delete">
 							delete
 						</button>
 					</div>
@@ -49,7 +63,37 @@
 		</div>
 
 		<div class = "col-xs-12 connect-field">
-		<h2> Connect to a channel </h2>
+		<h2> Add a favorite channel </h2>
+			<div class = "col-xs-12">
+				<div class="col-xs-4">
+					<h4> Server: </h4>
+				</div>
+				<div class="col-xs-8"> 
+					<input id="fav-server" class="form-control" placeholder="enter server (ex. irc.freenode.net)"> 
+				</div>
+			</div>
+
+			<div class = "col-xs-12">
+				<div class="col-xs-4">
+					<h4> Channel: </h4>
+				</div>
+				<div class="col-xs-8"> 
+					<input id="fav-channel" class="form-control" placeholder="enter channel (ex. #a100chat)"> 
+				</div>
+			</div>
+
+			<div class = "col-xs-12">
+				<div class = "col-xs-4"></div>
+				<div class = "col-xs-5">
+					<button type="button" class="btn btn-default" id="fav-add-btn">add a favorite channel</button>	
+				</div>
+				<div class = "col-xs-3"></div>
+			</div>
+		</div>
+
+		<!--
+		<div class = "col-xs-12 connect-field">
+			<h2> Connect to a channel </h2>
 			<div class = "col-xs-12">
 				<div class="col-xs-4">
 					<h4> Nickname: </h4>
@@ -84,45 +128,8 @@
 				</div>
 				<div class = "col-xs-3"></div>
 			</div>
-		</div>
-
-		<div class = "col-xs-12 connect-field">
-		<h2> Add a favorite channel </h2>
-			<div class = "col-xs-12">
-				<div class="col-xs-4">
-					<h4> Nickname: </h4>
-				</div>
-				<div class="col-xs-8"> 
-					<input id="fav-nick" class="form-control col-xs-10" placeholder="enter nickname (ex. jakeIRC)"> 
-				</div>
-			</div>
-
-			<div class = "col-xs-12">
-				<div class="col-xs-4">
-					<h4> Server: </h4>
-				</div>
-				<div class="col-xs-8"> 
-					<input id="fav-server" class="form-control col-xs-10" placeholder="enter server (ex. irc.freenode.net)"> 
-				</div>
-			</div>
-
-			<div class = "col-xs-12">
-				<div class="col-xs-4">
-					<h4> Channel: </h4>
-				</div>
-				<div class="col-xs-8"> 
-					<input id="fav-channel" class="form-control col-xs-10" placeholder="enter channel (ex. #a100chat)"> 
-				</div>
-			</div>
-
-			<div class = "col-xs-12">
-				<div class = "col-xs-4"></div>
-				<div class = "col-xs-5">
-					<button type="button" class="btn btn-default" id="fav-add-btn">add a favorite channel</button>	
-				</div>
-				<div class = "col-xs-3"></div>
-			</div>
-		</div>
+		</div> 
+		-->
 
 	</div>
 </template>
