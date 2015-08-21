@@ -65,6 +65,7 @@ if (Meteor.isClient) {
   });
 
   Template.connect.helpers ({
+   
     favoritelist : function() {
       var favAra = [];
       var currentUser = Meteor.users.findOne(Meteor.user()._id);
@@ -84,7 +85,6 @@ if (Meteor.isClient) {
   });
 
   Template.connect.rendered = function() {
-
     //Allows for the dynamic list of favorite connect buttons to connect to the irc server
     $('.fav-connect').click(function() {
       var id = $(this).attr('id');
@@ -102,7 +102,6 @@ if (Meteor.isClient) {
     //Allows the user to remove favorite channels
     $('.fav-delete').click(function() {
       var id = $(this).attr('id');
-
       console.log("current id removed: " + id);
 
       var curFavlist = [];
@@ -154,14 +153,14 @@ if (Meteor.isClient) {
   Template.connect.events({
     //These events allow the send message and enter key to send messages to the irc channel
 
-    /*'click #connect-btn': function(event, template) {
+    'click #connect-btn': function(event, template) {
       Meteor.call('ircConnect', Meteor.user().profile.favnick, 
       template.find('#server-name').value, template.find('#channel-name').value);
 
       $('#server-name').val('');
       $('#channel-name').val('');
       Router.go('irc');
-    },*/
+    },
 
     'click #fav-add-btn': function(event, template) { 
       var curFavlist = [];
