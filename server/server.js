@@ -145,9 +145,26 @@ if (Meteor.isServer) {
   //Inserts a message into the collection
   function logMessage(from, message) {
     Messages.insert({
-        from: from,
-        message: message,
-        time: Date.now()
+      from: from,
+      message: message,
+      time: Date.now()
+    });
+
+    var curLogs = [];
+
+    curLogs = Meteor.user().profile.logs;
+
+    var newEntry = {
+      channel: "channel: " + currentChannel + " ",
+      from: from,
+      message: message,
+      time: Date.now()
+    }
+
+    curLogs.push(newEntry);
+
+    Meteor.users.update({_id:Meteor.user()._id},
+     {$set: { "profile.logs": curLogs }
     });
   }
 

@@ -15,17 +15,17 @@ if (Meteor.isClient) {
       var i = 0;
 
       cursor.forEach(function(document) {
-          var time = formatTime(document.time);
+        var time = formatTime(document.time);
 
-          pulledMessages.push({
-            message: time + document.from + ': ' + document.message, position: i
-          });
-          //Scrolls to the bottom if a new message has been added
-          if (msgCounter < i) {
-            scrollBottom();
-            msgCounter = i;
-          }
-          i++;
+        pulledMessages.push({
+          message: time + document.from + ': ' + document.message, position: i
+        });
+        //Scrolls to the bottom if a new message has been added
+        if (msgCounter < i) {
+          scrollBottom();
+          msgCounter = i;
+        }
+        i++;
       });
 
       return pulledMessages.slice();
@@ -80,6 +80,34 @@ if (Meteor.isClient) {
       currentNick.push(currentUser.profile.favnick);
 
       return currentNick.slice();
+    }
+
+  });
+
+  Template.logs.helpers ({
+    logs : function() {
+
+      var pulledLogs = [];
+      var currentUser = Meteor.users.findOne(Meteor.user()._id);
+      cursor = currentUser.profile.logs;
+      var i = 0;
+
+      cursor.forEach(function(document) {
+        var time = formatTime(document.time);
+
+        pulledLogs.push({
+          message: time + document.channel + document.from + 
+          ': ' + document.message, position: i
+        });
+      });
+      //Scrolls to the bottom if a new message has been added
+      if (msgCounter < i) {
+        scrollBottom();
+        msgCounter = i;
+      }
+      i++;
+
+      return pulledLogs.slice();
     }
 
   });
@@ -181,7 +209,7 @@ if (Meteor.isClient) {
       curFavlist.push(newEntry);
 
       Meteor.users.update({_id:Meteor.user()._id},
-       {$set: { "profile.favlist": curFavlist}
+       {$set: { "profile.favlist": curFavlist }
       });
 
       $('#fav-server').val('');
@@ -206,7 +234,7 @@ if (Meteor.isClient) {
   Template.login.events({
     //Registers a new user into the meteor user db
     'click #register-btn': function(event, template) {
-      var initFavlist = [];
+      var initFavlist = [], initLogs = [];
 
       var newEntry = {
         "server" : "irc.rizon.net",
@@ -214,14 +242,23 @@ if (Meteor.isClient) {
         "index" : 0
       }
 
-      initFavlist.push(newEntry);      
+      var newLogs = {
+        "channel" : "client: #jakeIRCclient ",
+        "from" : "Server",
+        "message" : "Welcome to jakeIRC",
+        "time" : Date.now()
+      }      
+
+      initFavlist.push(newEntry);
+      initLogs.push(newLogs);
 
       var user = {
         "email" : $('#register-email').val(),
         "password" : $('#register-password').val(),
         "profile" : {
           "favlist" : initFavlist,
-          "favnick" : "jakeIRC"
+          "favnick" : "jakeIRC",
+          "logs" : initLogs
         }
       }
 
@@ -292,18 +329,23 @@ if (Meteor.isClient) {
   Template.header.events({ 
     //Relocates the user when they click on the header buttons
     'click #irc-btn': function(event, template) {
-        event.preventDefault();
-        Router.go('irc');
+      event.preventDefault();
+      Router.go('irc');
     },
 
     'click #connect-btn': function(event, template) {
-        event.preventDefault();
-        Router.go('connect');
+      event.preventDefault();
+      Router.go('connect');
+    },
+
+    'click #logs-btn' : function(event, template) {
+      event.preventDefault();
+      Router.go('logs');
     },
 
     'click #help-btn': function(event, template) {
-        event.preventDefault();
-        Router.go('help');
+      event.preventDefault();
+      Router.go('help');
     },
 
     'click #login-btn' : function (event, template) {
